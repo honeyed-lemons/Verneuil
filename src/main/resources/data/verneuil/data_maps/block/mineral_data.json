@@ -1,0 +1,16 @@
+{
+  "values": {
+    "minecraft:sand": {
+      "mineral_data": {
+        "Silica": 1,
+        "Carbon": 1
+      }
+    },
+    "minecraft:stone": {
+      "mineral_data": {
+        "Silica": 0.5,
+        "Carbon": 1
+      }
+    }
+  }
+}

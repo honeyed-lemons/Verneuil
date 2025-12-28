@@ -1,0 +1,13 @@
+{
+  "itemGroup.verneuil": "Example Mod Tab",
+  "block.verneuil.example_block": "Example Block",
+  "item.verneuil.example_item": "Example Item",
+
+  "verneuil.configuration.title": "Verneuil Configs",
+  "verneuil.configuration.section.verneuil.common.toml": "Verneuil Configs",
+  "verneuil.configuration.section.verneuil.common.toml.title": "Verneuil Configs",
+  "verneuil.configuration.items": "Item List",
+  "verneuil.configuration.logDirtBlock": "Log Dirt Block",
+  "verneuil.configuration.magicNumberIntroduction": "Magic Number Text",
+  "verneuil.configuration.magicNumber": "Magic Number"
+}

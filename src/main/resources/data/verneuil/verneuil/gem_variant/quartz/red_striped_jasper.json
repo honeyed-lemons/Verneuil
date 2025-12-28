@@ -1,0 +1,75 @@
+{
+  "entity" : "verneuil:quartz",
+  "gem_item": {
+    "id" : "verneuil:red_striped_jasper_gem",
+    "count" : 1
+  },
+  "type": "red_striped_jasper",
+  "translation": "gay",
+  "palettes": [
+    "skin",
+    "hair",
+    "gem",
+    "markings"
+  ],
+  "variants": {
+    "hair": [
+      "hair_1",
+      "hair_2",
+      "hair_3",
+      "hair_4",
+      "hair_5",
+      "hair_6"
+    ],
+    "gem": [
+      "back",
+      "back_of_head",
+      "belly",
+      "chest",
+      "forehead",
+      "left_cheek",
+      "left_eye",
+      "left_hand",
+      "left_knee",
+      "left_shoulder",
+      "nose",
+      "right_cheek",
+      "right_eye",
+      "right_hand",
+      "right_knee",
+      "right_shoulder",
+      "top_of_head"
+    ],
+    "markings": [
+      "tiger","stripe"
+    ]
+  },
+  "layers": [{
+      "name": "eyes",
+      "palette" : "gem",
+      "is_variant": false
+    }, {
+      "name": "skin",
+      "palette" : "skin",
+      "is_variant": false
+    }, {
+      "name": "markings",
+      "palette" : "markings",
+      "is_variant": true
+    }, {
+      "name": "hair",
+      "palette" : "hair",
+      "is_variant": true
+    }, {
+      "name": "gem",
+      "palette" : "gem",
+      "is_variant": true
+    }
+  ],
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}
