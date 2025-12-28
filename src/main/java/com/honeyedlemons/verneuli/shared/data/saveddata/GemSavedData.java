@@ -54,8 +54,9 @@ public class GemSavedData extends SavedData {
     {
         try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(() -> "gemSavedData", Verneuil.LOGGER)) {
             var tag = this.gemData.get(uuid);
+            if (tag == null)
+                return null;
             return TagValueInput.create(problemreporter$scopedcollector, access, tag);
-
         }
     }
 

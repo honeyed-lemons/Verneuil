@@ -12,7 +12,9 @@ import com.honeyedlemons.verneuli.shared.data.dataserializers.VerneuilDataSerial
 import com.honeyedlemons.verneuli.shared.data.dataserializers.GemColorDataSerializer;
 import com.honeyedlemons.verneuli.shared.util.Palettes;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
@@ -211,11 +213,20 @@ public abstract class AbstractGem extends PathfinderMob {
     );
 
     @Override
-    public void remove(Entity.RemovalReason removalReason) {
-        Poof();
-        super.remove(removalReason);
+    public void die(@NotNull DamageSource damageSource) {
+        super.die(damageSource);
     }
-    public void Poof()
+    @Override
+    public void makePoofParticles() {
+        for (int i = 0; i < 80; i++) {
+            var gaussian = this.random.nextGaussian() * 0.04;
+            var scaler1 = 1;
+            var scaler2 = 3;
+            this.level()
+                    .addParticle(ParticleTypes.POOF, this.getRandomX(scaler2) - gaussian * scaler1, this.getRandomY() - gaussian * scaler1, this.getRandomZ(scaler2) - gaussian * scaler1, gaussian, gaussian, gaussian);
+        }
+    }
+    public ItemStack createAndSaveGemItem(ServerLevel serverLevel)
     {
         ItemStack gemItem = getGemVariant().gemItem();
         GemDataRecord gemData = gemItem.get(VerneuilDataComponents.GEM_DATA);
@@ -225,9 +236,25 @@ public abstract class AbstractGem extends PathfinderMob {
         gemData.with(this.getUUID());
 
         gemItem.set(VerneuilDataComponents.GEM_DATA,gemData);
-        saveGem(Objects.requireNonNull(this.level().getServer()).overworld());
-        drop(gemItem,false,false);
+        saveGem(serverLevel.getServer().overworld());
+        return gemItem;
     }
+
+    @Override
+    protected void dropEquipment(@NotNull ServerLevel serverLevel) {
+        super.dropEquipment(serverLevel);
+        serverLevel.broadcastEntityEvent(this, (byte)60);
+        var gemItem = createAndSaveGemItem(serverLevel);
+        this.spawnAtLocation(serverLevel,gemItem);
+    }
+    @Override
+    protected void tickDeath() {
+        this.deathTime++;
+        if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
+            this.remove(Entity.RemovalReason.KILLED);
+        }
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor server, @NotNull DifficultyInstance difficulty, @NotNull EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
@@ -241,6 +268,11 @@ public abstract class AbstractGem extends PathfinderMob {
 
         return super.finalizeSpawn(server, difficulty, spawnReason, spawnGroupData);
     }
+
+	@Override
+	public @NotNull Component getTypeName(){
+		return Component.translatable(this.getGemVariant().translation());
+	}
 
     @Override
     public boolean hurtServer(@NotNull ServerLevel level, @NotNull DamageSource damageSource, float amount) {

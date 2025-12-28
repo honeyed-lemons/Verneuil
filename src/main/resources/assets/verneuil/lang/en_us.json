@@ -9,5 +9,10 @@
   "verneuil.configuration.items": "Item List",
   "verneuil.configuration.logDirtBlock": "Log Dirt Block",
   "verneuil.configuration.magicNumberIntroduction": "Magic Number Text",
-  "verneuil.configuration.magicNumber": "Magic Number"
+  "verneuil.configuration.magicNumber": "Magic Number",
+
+  "verneuil.gemitem.warning": "This gem already exists, please delete this item.",
+
+  "verneuil.gemvariant.red_striped_jasper" : "Red Striped Jasper",
+  "verneuil.gemvariant.amethyst" : "Amethyst"
 }

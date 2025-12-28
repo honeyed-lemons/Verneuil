@@ -7,6 +7,7 @@ import com.honeyedlemons.verneuli.shared.data.saveddata.GemSavedData;
 import com.honeyedlemons.verneuli.shared.entities.gems.AbstractGem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -71,8 +72,11 @@ public class GemItem extends Item {
             spawnReason = EntitySpawnReason.LOAD;
             var gemSavedData = serverLevel.getDataStorage().computeIfAbsent(GemSavedData.ID);
             ValueInput valueInput = gemSavedData.getGem(gemData.uuid(), serverLevel.registryAccess());
-            if (valueInput.read("GemVariant", GemVariant.CODEC).isEmpty())
+            if (valueInput == null)
             {
+                if (context.getPlayer() != null)
+                    context.getPlayer().displayClientMessage(Component.translatable("verneuil.gemitem.warning"), false);
+
                 return InteractionResult.FAIL;
             }
             entity = spawnEntity(valueInput, level, spawnPos, spawnReason);
@@ -82,6 +86,8 @@ public class GemItem extends Item {
             }
         }
         itemStack.consume(1, null);
+
+
         return InteractionResult.SUCCESS;
     }
 

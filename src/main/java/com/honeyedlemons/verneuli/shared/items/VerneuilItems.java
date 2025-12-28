@@ -23,6 +23,6 @@ public class VerneuilItems {
 
     public static GemItem gemItem (Item.Properties properties, EntityType<?> entityType, String variant){
         var resourceLocation = ResourceLocation.fromNamespaceAndPath(MODID,entityType.toShortString()+"/"+variant);
-        return new GemItem(properties,entityType,resourceLocation);
+        return new GemItem(properties.stacksTo(1),entityType,resourceLocation);
     }
 }
