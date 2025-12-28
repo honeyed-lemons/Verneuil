@@ -13,7 +13,6 @@ import com.honeyedlemons.verneuli.shared.data.dataserializers.GemColorDataSerial
 import com.honeyedlemons.verneuli.shared.util.Palettes;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
@@ -43,10 +42,6 @@ public abstract class AbstractGem extends PathfinderMob {
     public AbstractGem(EntityType<? extends AbstractGem> entityType, Level level) {
         super(entityType, level);
     }
-    public AbstractGem(EntityType<? extends AbstractGem> entityType, Level level, GemVariant gemVariant) {
-        super(entityType, level);
-        this.setGemVariant(gemVariant);
-    }
 
     private static final EntityDataAccessor<Map<String,Integer>> GEM_COLORS = SynchedEntityData.defineId(
             AbstractGem.class, VerneuilDataSerializers.GEM_COLORS.get()
@@ -69,7 +64,7 @@ public abstract class AbstractGem extends PathfinderMob {
         super.readAdditionalSaveData(input);
         this.setGemColors(input.read("GemColors", GemColorDataSerializer.CODEC).orElse(new HashMap<>()));
         this.setGemLayerVariants(input.read("GemLayerVariants", GemLayerVariantDataSerializer.CODEC).orElse(new HashMap<>()));
-        this.setGemVariant(input.read("GemVariant", GemVariant.CODEC).orElse(new GemVariant()));
+        this.setGemVariant(input.read("GemVariant", GemVariant.CODEC).orElse(new GemVariant()), false, false);
     }
 
     @Override
@@ -87,8 +82,6 @@ public abstract class AbstractGem extends PathfinderMob {
         builder.define(GEM_LAYER_VARIANTS, new HashMap<>());
         builder.define(GEM_TYPE_VARIANT, new GemVariant());
     }
-
-    abstract GemVariant DefaultGemTypeVariant();
 
     public void addColor(String name, Integer color) {
         var map = this.entityData.get(GEM_COLORS);
@@ -131,8 +124,13 @@ public abstract class AbstractGem extends PathfinderMob {
         this.setGemLayerVariants(map);
     }
 
-    public void setGemVariant(GemVariant variant) {
+    public void setGemVariant(GemVariant variant, @Nullable Boolean generatePalette, @Nullable Boolean generateVariants) {
         this.entityData.set(GEM_TYPE_VARIANT,variant);
+        ServerLevel serverLevel = (ServerLevel) this.level();
+        if (Boolean.TRUE.equals(generatePalette))
+            GeneratePaletteColors(serverLevel);
+        if (Boolean.TRUE.equals(generateVariants))
+            GenerateLayerVariants(serverLevel);
     }
 
     public GemVariant getGemVariant() {
@@ -190,7 +188,7 @@ public abstract class AbstractGem extends PathfinderMob {
         else gemVariantList = gemVariantData.gemVariants();
 
         var picked = gemVariantList.get(random.nextInt(gemVariantList.size()));
-        setGemVariant(getGemVariant(picked));
+        setGemVariant(getGemVariant(picked), true, true);
     }
 
     public void saveGem(ServerLevel server)
@@ -239,8 +237,6 @@ public abstract class AbstractGem extends PathfinderMob {
             GemVariant gemVariant = this.getGemVariant();
             if (gemVariant.type() == null)
                 GenerateGemVariant(server);
-            GeneratePaletteColors(server);
-            GenerateLayerVariants(server);
         }
 
         return super.finalizeSpawn(server, difficulty, spawnReason, spawnGroupData);

@@ -57,23 +57,30 @@ public class GemItem extends Item {
         Entity entity;
         ServerLevel serverLevel = level.getServer().overworld();
         if (gemData == null)
-        {
+        { // Gem UUID is not stored in gem item, spawn random gem of gem variant
             spawnReason = EntitySpawnReason.SPAWN_ITEM_USE;
             entity = spawnEntity(level,spawnPos,spawnReason);
             if (entity instanceof AbstractGem gem)
             {
                 GemVariant gemVariant = getGemVariant(serverLevel, gemVariantLocation);
-                gem.setGemVariant(gemVariant);
+                gem.setGemVariant(gemVariant, true, true);
             }
         }
         else
-        {
+        { // Spawn gem with NBT data
             spawnReason = EntitySpawnReason.LOAD;
             var gemSavedData = serverLevel.getDataStorage().computeIfAbsent(GemSavedData.ID);
             ValueInput valueInput = gemSavedData.getGem(gemData.uuid(), serverLevel.registryAccess());
+            if (valueInput.read("GemVariant", GemVariant.CODEC).isEmpty())
+            {
+                return InteractionResult.FAIL;
+            }
             entity = spawnEntity(valueInput, level, spawnPos, spawnReason);
+            if (entity != null) {
+                gemSavedData.removeGem(entity.getUUID());
+                level.addFreshEntity(entity);
+            }
         }
-        level.addFreshEntity(entity);
         itemStack.consume(1, null);
         return InteractionResult.SUCCESS;
     }

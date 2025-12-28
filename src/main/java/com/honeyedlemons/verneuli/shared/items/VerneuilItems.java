@@ -19,7 +19,7 @@ public class VerneuilItems {
             gemItem(item, VerneuilEntities.QUARTZ.get(),"amethyst"));
 
     public static final DeferredItem<GemItem> QUARTZ_GEM_RED_STRIPED_JASPER = ITEMS.registerItem("red_striped_jasper_gem", item ->
-            gemItem(item, VerneuilEntities.QUARTZ.get(),"amethyst"));
+            gemItem(item, VerneuilEntities.QUARTZ.get(),"red_striped_jasper"));
 
     public static GemItem gemItem (Item.Properties properties, EntityType<?> entityType, String variant){
         var resourceLocation = ResourceLocation.fromNamespaceAndPath(MODID,entityType.toShortString()+"/"+variant);
