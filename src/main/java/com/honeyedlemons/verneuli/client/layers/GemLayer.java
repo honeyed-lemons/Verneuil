@@ -25,6 +25,11 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
         if (renderState.gemVariant.layers().isEmpty())
             return;
 
+        if (renderState.gemAppearanceData == null)
+        {
+            return;
+        }
+
         var layers = renderState.gemVariant.layers().get();
 
         layers.forEach((layerData)->
@@ -32,7 +37,7 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
             String name = layerData.layerName();
             String palette = layerData.paletteName().isPresent() ? layerData.paletteName().get() : null;
             Boolean isVariant = layerData.isVariant();
-            String variantName = isVariant ? renderState.layerVariants.get(name) : null;
+            String variantName = isVariant ? renderState.gemAppearanceData.getLayerData().get(name) : null;
 
             ResourceLocation resourceLocation = variantName != null
                     ? getVariantLocation(renderState,name,variantName) : getResourceLocation(renderState,name);
@@ -45,7 +50,7 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
                     rendertype,
                     packedLight,
                     LivingEntityRenderer.getOverlayCoords(renderState, 0.0F),
-                    renderState.colors.getOrDefault(palette, Color.WHITE.getRGB()),
+                    renderState.gemAppearanceData.getColorData().getOrDefault(palette, Color.WHITE.getRGB()),
                     null,
                     renderState.outlineColor,
                     null);

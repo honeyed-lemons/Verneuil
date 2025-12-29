@@ -1,7 +1,9 @@
 package com.honeyedlemons.verneuli.shared.data.dataTypes;
 
+import com.honeyedlemons.verneuli.shared.data.dataAttachments.GemAppearanceData;
 import com.honeyedlemons.verneuli.shared.data.dataMaps.BlockMineralDataMap;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
@@ -36,6 +38,7 @@ public final class GemVariant {
 
 	public static StreamCodec<RegistryFriendlyByteBuf, Holder<GemVariant>> STREAM_CODEC = ByteBufCodecs.holderRegistry(VerneuilDataTypes.GEM_VARIANT);
 
+	public static final MapCodec<GemVariant> MAP_CODEC = MapCodec.assumeMapUnsafe(DIRECT_CODEC);
 
 	private Optional<Holder<DefaultGemVariant>> parent;
 	private final Optional<ResourceLocation> entity;

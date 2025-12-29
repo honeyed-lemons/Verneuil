@@ -16,12 +16,14 @@ public class VerneuilDataAttachments {
 	public static final Supplier<AttachmentType<GemAppearanceData>> GEM_APPEARANCE_DATA = ATTACHMENT_TYPES.register(
 			"gem_appearance_data", () -> AttachmentType.builder(GemAppearanceData::new)
 					.sync(GemAppearanceData.STREAM_CODEC)
+					.serialize(GemAppearanceData.MAP_CODEC)
 					.build()
 	);
 
 	public static final Supplier<AttachmentType<GemVariant>> GEM_VARIANT = ATTACHMENT_TYPES.register(
 			"gem_variant", () -> AttachmentType.builder(GemVariant::new)
 					.sync(GemVariant.DIRECT_STREAM_CODEC)
+					.serialize(GemVariant.MAP_CODEC)
 					.build()
 	);
 

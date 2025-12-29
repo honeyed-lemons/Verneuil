@@ -28,8 +28,7 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
     @Override
     public void extractRenderState(@NotNull AbstractGem type, @NotNull GemRenderState renderState, float partialTick) {
         super.extractRenderState(type, renderState, partialTick);
-        renderState.colors = type.getGemColors();
-        renderState.layerVariants = type.getGemLayerData();
+        renderState.gemAppearanceData = type.getGemAppearanceData();
         renderState.gemVariant = type.getGemVariant();
     }
 }
