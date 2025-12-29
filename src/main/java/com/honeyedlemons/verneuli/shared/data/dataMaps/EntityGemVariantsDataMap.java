@@ -1,19 +1,15 @@
-package com.honeyedlemons.verneuli.shared.data.datamaps;
+package com.honeyedlemons.verneuli.shared.data.dataMaps;
 
 import com.honeyedlemons.verneuli.Verneuil;
-import com.honeyedlemons.verneuli.shared.data.datatypes.GemVariant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.ResourceLoadStateTracker;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EntityGemVariantsDataMap {

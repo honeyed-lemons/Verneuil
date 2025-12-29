@@ -1,4 +1,4 @@
-package com.honeyedlemons.verneuli.shared.data.datamaps;
+package com.honeyedlemons.verneuli.shared.data.dataMaps;
 
 import com.honeyedlemons.verneuli.Verneuil;
 import com.mojang.serialization.Codec;

@@ -1,9 +1,9 @@
 package com.honeyedlemons.verneuli.shared.items;
 
-import com.honeyedlemons.verneuli.shared.data.datacomponents.VerneuilDataComponents;
-import com.honeyedlemons.verneuli.shared.data.datatypes.GemVariant;
-import com.honeyedlemons.verneuli.shared.data.datatypes.VerneuilDataTypes;
-import com.honeyedlemons.verneuli.shared.data.saveddata.GemSavedData;
+import com.honeyedlemons.verneuli.shared.data.dataComponents.VerneuilDataComponents;
+import com.honeyedlemons.verneuli.shared.data.dataTypes.GemVariant;
+import com.honeyedlemons.verneuli.shared.data.dataTypes.VerneuilDataTypes;
+import com.honeyedlemons.verneuli.shared.data.savedData.GemSavedData;
 import com.honeyedlemons.verneuli.shared.entities.gems.AbstractGem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -6,12 +6,8 @@ import com.honeyedlemons.verneuli.client.renderer.entity.renderstates.GemRenderS
 import com.honeyedlemons.verneuli.shared.entities.gems.AbstractGem;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.AllayRenderState;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 
 public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRenderState> extends LivingEntityRenderer<AbstractGem, GemRenderState, AbstractGemModel> {
     public AbstractGemRenderer(EntityRendererProvider.Context context, AbstractGemModel model, float shadowRadius) {
@@ -33,7 +29,7 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
     public void extractRenderState(@NotNull AbstractGem type, @NotNull GemRenderState renderState, float partialTick) {
         super.extractRenderState(type, renderState, partialTick);
         renderState.colors = type.getGemColors();
-        renderState.layerVariants = type.getGemLayerVariants();
+        renderState.layerVariants = type.getGemLayerData();
         renderState.gemVariant = type.getGemVariant();
     }
 }

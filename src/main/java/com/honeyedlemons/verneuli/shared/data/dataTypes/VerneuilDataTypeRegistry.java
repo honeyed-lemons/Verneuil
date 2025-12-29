@@ -1,4 +1,4 @@
-package com.honeyedlemons.verneuli.shared.data.datatypes;
+package com.honeyedlemons.verneuli.shared.data.dataTypes;
 
 import com.honeyedlemons.verneuli.Verneuil;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -10,8 +10,15 @@ public class VerneuilDataTypeRegistry {
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(
-                VerneuilDataTypes.GEM_VARIANT,
-                GemVariant.CODEC
+                VerneuilDataTypes.DEFAULT_GEM_VARIANT,
+                DefaultGemVariant.DIRECT_CODEC,
+                DefaultGemVariant.DIRECT_CODEC
         );
+        event.dataPackRegistry(
+                VerneuilDataTypes.GEM_VARIANT,
+                GemVariant.DIRECT_CODEC,
+                GemVariant.DIRECT_CODEC
+        );
+
     }
 }

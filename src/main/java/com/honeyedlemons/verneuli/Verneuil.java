@@ -1,9 +1,9 @@
 package com.honeyedlemons.verneuli;
 
 import com.honeyedlemons.verneuli.shared.blocks.VerneuilBlocks;
-import com.honeyedlemons.verneuli.shared.data.datacomponents.VerneuilDataComponents;
-import com.honeyedlemons.verneuli.shared.data.datamaps.*;
-import com.honeyedlemons.verneuli.shared.data.dataserializers.VerneuilDataSerializers;
+import com.honeyedlemons.verneuli.shared.data.dataAttachments.VerneuilDataAttachments;
+import com.honeyedlemons.verneuli.shared.data.dataComponents.VerneuilDataComponents;
+import com.honeyedlemons.verneuli.shared.data.dataMaps.*;
 import com.honeyedlemons.verneuli.shared.entities.VerneuilEntities;
 import com.honeyedlemons.verneuli.shared.items.VerneuilItems;
 import org.slf4j.Logger;
@@ -29,15 +29,14 @@ public class Verneuil {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public Verneuil(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.register(this);
 
         VerneuilBlocks.BLOCK_ENTITY_TYPES.register(modEventBus);
         VerneuilBlocks.BLOCKS.register(modEventBus);
         VerneuilItems.ITEMS.register(modEventBus);
-        VerneuilDataSerializers.DATA_SERIALIZERS.register(modEventBus);
         VerneuilDataComponents.DATA_COMPONENTS.register(modEventBus);
+        VerneuilDataAttachments.ATTACHMENT_TYPES.register(modEventBus);
         VerneuilEntities.ENTITY_TYPES.register(modEventBus);
 
         CREATIVE_MODE_TABS.register(modEventBus);

@@ -1,6 +1,5 @@
-package com.honeyedlemons.verneuli.shared.data.datacomponents;
+package com.honeyedlemons.verneuli.shared.data.dataComponents;
 
-import com.honeyedlemons.verneuli.shared.data.saveddata.GemSavedData;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -19,8 +18,8 @@ public record GemDataRecord(UUID uuid) {
 
     public static final StreamCodec<ByteBuf, GemDataRecord> UNIT_STREAM_CODEC = ByteBufCodecs.fromCodec(BASIC_CODEC);
 
-    public GemDataRecord with(UUID uuid)
+    public void with(UUID uuid)
     {
-        return new GemDataRecord(uuid);
+        new GemDataRecord(uuid);
     }
 }

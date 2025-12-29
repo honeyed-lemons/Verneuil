@@ -1,10 +1,9 @@
-package com.honeyedlemons.verneuli.shared.data.saveddata;
+package com.honeyedlemons.verneuli.shared.data.savedData;
 
 import com.honeyedlemons.verneuli.Verneuil;
 import com.honeyedlemons.verneuli.shared.entities.gems.AbstractGem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;

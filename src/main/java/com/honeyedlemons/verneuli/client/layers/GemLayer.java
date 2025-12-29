@@ -22,10 +22,12 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
 
     @Override
     public void submit(@NotNull PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, @NotNull GemRenderState renderState, float yRot, float xRot) {
-        if (renderState.gemVariant.layers() == null)
+        if (renderState.gemVariant.layers().isEmpty())
             return;
 
-        renderState.gemVariant.layers().forEach((layerData)->
+        var layers = renderState.gemVariant.layers().get();
+
+        layers.forEach((layerData)->
         {
             String name = layerData.layerName();
             String palette = layerData.paletteName().isPresent() ? layerData.paletteName().get() : null;
@@ -35,7 +37,7 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
             ResourceLocation resourceLocation = variantName != null
                     ? getVariantLocation(renderState,name,variantName) : getResourceLocation(renderState,name);
             RenderType rendertype = RenderType.entityTranslucent(resourceLocation);
-            int index = renderState.gemVariant.layers().indexOf(layerData);
+            int index = layers.indexOf(layerData);
             nodeCollector.order(index).submitModel(
                     this.getParentModel(),
                     renderState,

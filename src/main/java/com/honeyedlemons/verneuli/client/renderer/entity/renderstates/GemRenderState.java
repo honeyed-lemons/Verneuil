@@ -1,6 +1,6 @@
 package com.honeyedlemons.verneuli.client.renderer.entity.renderstates;
 
-import com.honeyedlemons.verneuli.shared.data.datatypes.GemVariant;
+import com.honeyedlemons.verneuli.shared.data.dataTypes.GemVariant;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 import java.util.Map;

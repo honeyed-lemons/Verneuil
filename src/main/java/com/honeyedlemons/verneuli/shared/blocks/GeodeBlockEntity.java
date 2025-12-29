@@ -1,7 +1,7 @@
 package com.honeyedlemons.verneuli.shared.blocks;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import com.honeyedlemons.verneuli.shared.data.datamaps.BlockMineralDataMap;
+import com.honeyedlemons.verneuli.shared.data.dataMaps.BlockMineralDataMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
