@@ -9,42 +9,143 @@ import com.honeyedlemons.verneuli.shared.data.dataMaps.EntityGemVariantsDataMap;
 import com.honeyedlemons.verneuli.shared.data.dataTypes.GemVariant;
 import com.honeyedlemons.verneuli.shared.data.dataTypes.VerneuilDataTypes;
 import com.honeyedlemons.verneuli.shared.data.savedData.GemSavedData;
+import com.honeyedlemons.verneuli.shared.entities.TamableMob;
 import com.honeyedlemons.verneuli.shared.util.Palettes;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.tslat.smartbrainlib.api.SmartBrainOwner;
+import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
+import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
+import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.List;
 
-public abstract class AbstractGem extends PathfinderMob {
+public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<AbstractGem>, OwnableEntity {
 
     public AbstractGem(EntityType<? extends AbstractGem> entityType, Level level) {
         super(entityType, level);
     }
 
+
     public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(Attributes.FOLLOW_RANGE, 32);
+                .add(Attributes.FOLLOW_RANGE, 32)
+                .add(Attributes.ATTACK_DAMAGE, 1)
+                .add(Attributes.MOVEMENT_SPEED, 0.1f);
     }
 
-    public GemAppearanceData getGemAppearanceData()
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        Item item = itemstack.getItem();
+        if (!this.level().isClientSide())
+        {
+            return InteractionResult.PASS;
+        }
+        if (!this.isTame())
+        {
+            tame(player,getTameMessage());
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    public Component getTameMessage()
+    {
+        return Component.translatable("vernueil.gem.tamemessage", this.getDisplayName());
+    }
+	//region Brain
+	@Override
+    protected Brain.@NotNull Provider<?> brainProvider() {
+        return new SmartBrainProvider<>(this);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+	@Override
+    protected void customServerAiStep(@NotNull ServerLevel level) {
+        tickBrain(this);
+    }
+
+    @Override
+    public List<ExtendedSensor<AbstractGem>> getSensors() {
+        return ObjectArrayList.of(
+                new NearbyLivingEntitySensor<>(), // This tracks nearby entities
+                new HurtBySensor<>()                // This tracks the last damage source and attacker
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<AbstractGem> getCoreTasks() { // These are the tasks that run all the time (usually)
+        return BrainActivityGroup.coreTasks(
+                new LookAtTarget<>(),                      // Have the entity turn to face and look at its current look target
+                new MoveToWalkTarget<>());                 // Walk towards the current walk target
+    }
+
+    @Override
+    public BrainActivityGroup<AbstractGem> getIdleTasks() { // These are the tasks that run when the mob isn't doing anything else (usually)
+        return BrainActivityGroup.idleTasks(
+                new FirstApplicableBehaviour<AbstractGem>(      // Run only one of the below behaviours, trying each one in order. Include the generic type because JavaC is silly
+                        new SetPlayerLookTarget<>(),          // Set the look target for the nearest player
+                        new SetRandomLookTarget<>()),         // Set a random look target
+                new OneRandomBehaviour<>(                 // Run a random task from the below options
+                        new SetRandomWalkTarget<>(),          // Set a random walk target to a nearby position
+                        new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60)))); // Do nothing for 1.5->3 seconds
+    }
+
+    @Override
+    public BrainActivityGroup<AbstractGem> getFightTasks() { // These are the tasks that handle fighting
+        return BrainActivityGroup.fightTasks(
+                new InvalidateAttackTarget<>(), // Cancel fighting if the target is no longer valid
+                new SetWalkTargetToAttackTarget<>(),      // Set the walk target to the attack target
+                new AnimatableMeleeAttack<>(0)); // Melee attack the target if close enough
+    }
+
+	//endregion
+
+	//region GemAppearanceData Code
+	public GemAppearanceData getGemAppearanceData()
     {
         return this.getData(VerneuilDataAttachments.GEM_APPEARANCE_DATA);
     }
@@ -92,14 +193,46 @@ public abstract class AbstractGem extends PathfinderMob {
         appearanceData.addLayerData(layerName,layerData);
         this.setGemLayerData(appearanceData.getLayerData());
     }
+    public void GeneratePaletteColors(ServerLevelAccessor server) {
+        var random = server.getRandom();
+        if (this.getGemVariant().palettes().isEmpty())
+            return;
 
-    public GemVariant getGemVariant()
+        var palettes = this.getGemVariant().palettes().get();
+
+        for (String type : palettes){
+            var paletteLocation = Palettes.PaletteLocation(this,type);
+            this.addColor(type,Palettes.GenerateColorFromPalette(paletteLocation,random,server));
+        }
+    }
+
+    public void GenerateLayerVariants(ServerLevelAccessor server){
+        var random = server.getRandom();
+        if (this.getGemVariant().variants().isEmpty())
+            return;
+
+        var variants = this.getGemVariant().variants().get();
+
+        variants.forEach((type, variantList)-> {
+            var picked = random.nextInt(variantList.size());
+            this.AddGemLayer(type, variantList.get(picked));
+        });
+    }
+	//endregion
+
+	//region GemVariant Code
+	public GemVariant getGemVariant()
     {
-        return this.getData(VerneuilDataAttachments.GEM_VARIANT);
+        if (this.hasData(VerneuilDataAttachments.GEM_VARIANT))
+            return this.getData(VerneuilDataAttachments.GEM_VARIANT).value();
+        else
+            return new GemVariant();
     }
 
     public void setGemVariant(GemVariant variant, @Nullable Boolean generatePalette, @Nullable Boolean generateVariants) {
-        this.setData(VerneuilDataAttachments.GEM_VARIANT,variant);
+        final var registry = registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT);
+        Holder<GemVariant> holder  = registry.wrapAsHolder(variant);
+        this.setData(VerneuilDataAttachments.GEM_VARIANT,holder);
         ServerLevel serverLevel = (ServerLevel) this.level();
         if (Boolean.TRUE.equals(generatePalette))
             GeneratePaletteColors(serverLevel);
@@ -126,32 +259,6 @@ public abstract class AbstractGem extends PathfinderMob {
         return gemVariant.map(Holder.Reference::value).orElse(null);
     }
 
-    public void GeneratePaletteColors(ServerLevelAccessor server) {
-        var random = server.getRandom();
-        if (this.getGemVariant().palettes().isEmpty())
-            return;
-
-        var palettes = this.getGemVariant().palettes().get();
-
-        for (String type : palettes){
-            var paletteLocation = Palettes.PaletteLocation(this,type);
-            this.addColor(type,Palettes.GenerateColorFromPalette(paletteLocation,random,server));
-        }
-    }
-
-    public void GenerateLayerVariants(ServerLevelAccessor server){
-        var random = server.getRandom();
-        if (this.getGemVariant().variants().isEmpty())
-            return;
-
-        var variants = this.getGemVariant().variants().get();
-
-        variants.forEach((type, variantList)-> {
-            var picked = random.nextInt(variantList.size());
-            this.AddGemLayer(type, variantList.get(picked));
-        });
-    }
-
     public void GenerateGemVariant(ServerLevelAccessor server){
         var random = server.getRandom();
 
@@ -168,6 +275,7 @@ public abstract class AbstractGem extends PathfinderMob {
         var picked = gemVariantList.get(random.nextInt(gemVariantList.size()));
         setGemVariant(getGemVariant(picked), true, true);
     }
+	//endregion
 
     public void saveGem(ServerLevel server)
     {
@@ -185,7 +293,7 @@ public abstract class AbstractGem extends PathfinderMob {
     }
 
     public List<String> dataToDiscard = new ArrayList<>(
-            Arrays.asList("AbsorptionAmount","Air","DeathTime","FallFlying","Fire","Health","HurtByTimestamp","fall_distance")
+            Arrays.asList("AbsorptionAmount","Air","DeathTime","FallFlying","Fire","Health","HurtByTimestamp","fall_distance","Motion")
     );
 
     @Override
@@ -204,7 +312,8 @@ public abstract class AbstractGem extends PathfinderMob {
     }
     public ItemStack createAndSaveGemItem(ServerLevel serverLevel)
     {
-        ItemStack gemItem = getGemVariant().gemItem();
+        ItemStack gemItem = getGemVariant().gemItem().copy();
+        gemItem.remove(VerneuilDataComponents.GEM_DATA);
         GemDataRecord gemData = gemItem.get(VerneuilDataComponents.GEM_DATA);
         if (gemData == null)
             gemData = new GemDataRecord(this.getUUID());
@@ -223,6 +332,7 @@ public abstract class AbstractGem extends PathfinderMob {
         var gemItem = createAndSaveGemItem(serverLevel);
         this.spawnAtLocation(serverLevel,gemItem);
     }
+
     @Override
     protected void tickDeath() {
         this.deathTime++;

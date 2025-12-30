@@ -38,7 +38,7 @@ public final class GemVariant {
 
 	public static StreamCodec<RegistryFriendlyByteBuf, Holder<GemVariant>> STREAM_CODEC = ByteBufCodecs.holderRegistry(VerneuilDataTypes.GEM_VARIANT);
 
-	public static final MapCodec<GemVariant> MAP_CODEC = MapCodec.assumeMapUnsafe(DIRECT_CODEC);
+	public static final MapCodec<Holder<GemVariant>> MAP_CODEC = MapCodec.assumeMapUnsafe(CODEC);
 
 	private Optional<Holder<DefaultGemVariant>> parent;
 	private final Optional<ResourceLocation> entity;

@@ -81,8 +81,8 @@ public class GemItem extends Item {
             }
             entity = spawnEntity(valueInput, level, spawnPos, spawnReason);
             if (entity != null) {
-                gemSavedData.removeGem(entity.getUUID());
                 level.addFreshEntity(entity);
+                gemSavedData.removeGem(entity.getUUID());
             }
         }
         itemStack.consume(1, null);

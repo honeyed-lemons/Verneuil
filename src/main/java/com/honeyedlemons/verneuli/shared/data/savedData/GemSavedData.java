@@ -28,12 +28,8 @@ public class GemSavedData extends SavedData {
     ).apply(instance, GemSavedData::new));
 
     public static final SavedDataType<GemSavedData> ID = new SavedDataType<>(
-            // The identifier of the saved data
-            // Used as the path within the level's `data` folder
             "gem_data",
-            // The initial constructor
             GemSavedData::new,
-            // The codec used to serialize the data
             CODEC
     );
     private GemSavedData() {
@@ -63,6 +59,7 @@ public class GemSavedData extends SavedData {
     {
         CompoundTag tag = output.buildResult();
         this.gemData.put(uuid, tag);
+        this.setDirty();
     }
 
     public void removeGem(UUID uuid)

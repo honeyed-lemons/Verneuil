@@ -11,8 +11,10 @@
   "verneuil.configuration.magicNumberIntroduction": "Magic Number Text",
   "verneuil.configuration.magicNumber": "Magic Number",
 
-  "verneuil.gemitem.warning": "This gem already exists, please delete this item.",
+  "verneuil.gemitem.warning": "This gem is either already in the world, or no longer exists, please delete this item!",
 
   "verneuil.gemvariant.red_striped_jasper" : "Red Striped Jasper",
-  "verneuil.gemvariant.amethyst" : "Amethyst"
+  "verneuil.gemvariant.amethyst" : "Amethyst",
+
+  "vernueil.gem.tamemessage": "Claimed %s!"
 }

@@ -18,6 +18,10 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+    maven {
+        name = "SmartBrainLib (SBL) Maven Repo"
+        url = "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+    }
 }
 
 base {
@@ -128,6 +132,7 @@ dependencies {
 
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
+    implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}"
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

@@ -1,7 +1,6 @@
 package com.honeyedlemons.verneuli.shared.data.dataAttachments;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 public class GemAppearanceData {
 
-	public Map<String,String> LayerData;
-	public Map<String,Integer> ColorData;
+	private Map<String,String> LayerData;
+	private Map<String,Integer> ColorData;
 
 	public GemAppearanceData(Map<String,String> layerData, Map<String,Integer> colorData){
 		this.LayerData = layerData;
@@ -68,5 +67,4 @@ public class GemAppearanceData {
 			GemAppearanceData::new
 	);
 
-	public static final MapCodec<GemAppearanceData> MAP_CODEC = MapCodec.assumeMapUnsafe(CODEC);
 }
