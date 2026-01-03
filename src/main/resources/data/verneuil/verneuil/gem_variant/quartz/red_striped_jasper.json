@@ -7,10 +7,30 @@
   "type": "red_striped_jasper",
   "translation": "verneuil.gemvariant.red_striped_jasper",
   "palettes": [
-    "skin",
-    "hair",
-    "gem",
-    "markings"
+    {
+      "name": "skin",
+      "random": true
+    },
+    {
+      "name": "hair",
+      "random": true
+    },
+    {
+      "name": "uniform",
+      "random": false
+    },
+    {
+      "name": "insignia",
+      "random": false
+    },
+    {
+      "name": "gem",
+      "random": true
+    },
+    {
+      "name": "markings",
+      "random": true
+    }
   ],
   "variants": {
     "hair": [
@@ -42,6 +62,12 @@
     ],
     "markings": [
       "tiger","stripe"
+    ],
+    "uniform": [
+      "default"
+    ],
+    "insignia": [
+      "default"
     ]
   },
   "layers": [{
@@ -56,11 +82,26 @@
       "name": "markings",
       "palette" : "markings",
       "is_variant": true
-    }, {
+    },
+    {
+      "name": "uniform",
+      "palette" : "uniform",
+      "is_variant": true,
+      "layers_to_prefix": [
+        "belly","back"
+      ]
+    },
+    {
+      "name": "insignia",
+      "palette" : "insignia",
+      "is_variant": true
+    },
+    {
       "name": "hair",
       "palette" : "hair",
       "is_variant": true
-    }, {
+    },
+    {
       "name": "gem",
       "palette" : "gem",
       "is_variant": true

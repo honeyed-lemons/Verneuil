@@ -1,11 +1,12 @@
 package com.honeyedlemons.verneuli;
 
-import com.honeyedlemons.verneuli.shared.blocks.VerneuilBlocks;
-import com.honeyedlemons.verneuli.shared.data.dataAttachments.VerneuilDataAttachments;
-import com.honeyedlemons.verneuli.shared.data.dataComponents.VerneuilDataComponents;
-import com.honeyedlemons.verneuli.shared.data.dataMaps.*;
-import com.honeyedlemons.verneuli.shared.entities.VerneuilEntities;
-import com.honeyedlemons.verneuli.shared.items.VerneuilItems;
+import com.honeyedlemons.verneuli.blocks.VerneuilBlocks;
+import com.honeyedlemons.verneuli.config.VerneuilConfigServer;
+import com.honeyedlemons.verneuli.data.dataAttachments.VerneuilDataAttachments;
+import com.honeyedlemons.verneuli.data.dataComponents.VerneuilDataComponents;
+import com.honeyedlemons.verneuli.data.dataMaps.*;
+import com.honeyedlemons.verneuli.entities.VerneuilEntities;
+import com.honeyedlemons.verneuli.items.VerneuilItems;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -45,7 +46,7 @@ public class Verneuil {
         modEventBus.register(EntityGemVariantsDataMap.class);
 
         NeoForge.EVENT_BUS.register(this);
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, VerneuilConfigServer.CONFIG_SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

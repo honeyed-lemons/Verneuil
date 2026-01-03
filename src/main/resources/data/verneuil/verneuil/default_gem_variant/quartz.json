@@ -1,9 +1,26 @@
 {
   "entity" : "verneuil:quartz",
   "palettes": [
-    "skin",
-    "hair",
-    "gem"
+    {
+      "name": "skin",
+      "random": true
+    },
+    {
+      "name": "uniform",
+      "random": false
+    },
+    {
+      "name": "insignia",
+      "random": false
+    },
+    {
+      "name": "hair",
+      "random": true
+    },
+    {
+      "name": "gem",
+      "random": true
+    }
   ],
   "variants": {
     "hair": [
@@ -32,6 +49,12 @@
       "right_knee",
       "right_shoulder",
       "top_of_head"
+    ],
+    "uniform": [
+      "default"
+    ],
+    "insignia": [
+      "default"
     ]
   },
   "layers": [
@@ -44,6 +67,19 @@
       "name": "skin",
       "palette" : "skin",
       "is_variant": false
+    },
+    {
+      "name": "uniform",
+      "palette" : "uniform",
+      "is_variant": true,
+      "layers_to_prefix": [
+        "belly","back"
+      ]
+    },
+    {
+      "name": "insignia",
+      "palette" : "insignia",
+      "is_variant": true
     },
     {
       "name": "hair",

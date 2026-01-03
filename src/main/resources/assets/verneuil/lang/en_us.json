@@ -3,18 +3,24 @@
   "block.verneuil.example_block": "Example Block",
   "item.verneuil.example_item": "Example Item",
 
+  "vernueil.commands.randomize.success.single" : "Randomized %s's appearance!",
+  "vernueil.commands.randomize.success.multiple" : "Randomized %s gems' appearances!",
+  "vernueil.commands.randomize.failure" : "Failed randomizing appearance, are they not a gem?",
+
   "verneuil.configuration.title": "Verneuil Configs",
   "verneuil.configuration.section.verneuil.common.toml": "Verneuil Configs",
   "verneuil.configuration.section.verneuil.common.toml.title": "Verneuil Configs",
-  "verneuil.configuration.items": "Item List",
-  "verneuil.configuration.logDirtBlock": "Log Dirt Block",
-  "verneuil.configuration.magicNumberIntroduction": "Magic Number Text",
-  "verneuil.configuration.magicNumber": "Magic Number",
+  "verneuil.configuration.reformTime": "Reform Time",
 
   "verneuil.gemitem.warning": "This gem is either already in the world, or no longer exists, please delete this item!",
 
   "verneuil.gemvariant.red_striped_jasper" : "Red Striped Jasper",
   "verneuil.gemvariant.amethyst" : "Amethyst",
 
-  "vernueil.gem.tamemessage": "Claimed %s!"
+  "verneuil.gem.tamemessage": "Claimed %s!",
+
+  "verneuil.gem.movementype.0": "%s is wandering.",
+  "verneuil.gem.movementype.1": "%s will stay still.",
+  "verneuil.gem.movementype.2": "%s will follow you."
+
 }

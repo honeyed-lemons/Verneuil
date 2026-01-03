@@ -1,0 +1,11 @@
+// 1.21.10	2026-01-03T00:38:31.5927434	Model Definitions - verneuil
+0be6ad687de18e5a301dd7f72e644c67652a35c3 assets/verneuil/blockstates/drained_block.json
+de12bf7d3993c472abe1baf731fae9510abc4aff assets/verneuil/blockstates/geode.json
+971878068fa79cae03f5adf0251ac8cc858a157f assets/verneuil/items/amethyst_gem.json
+b0d8293692f49deda4d23889043c7cdf5aa17f14 assets/verneuil/items/drained_block.json
+64b7594cd06abd9c0f35688db2c8ce77330dd0c8 assets/verneuil/items/geode.json
+361023aeb3787179de3d880baab4c1d4920237a7 assets/verneuil/items/red_striped_jasper_gem.json
+78b754d1e4aaeb270829cef43b7d4b8c906d6fb4 assets/verneuil/models/block/drained_block.json
+28e873be36062c0fe749ad97ac6865f0a2bc6031 assets/verneuil/models/block/geode.json
+97f199d71e94e9fc6298bfa4618d37f9c22c4fdd assets/verneuil/models/item/amethyst_gem.json
+3730fb4962f2fd2f0457c0cf037beb6ddf8302b2 assets/verneuil/models/item/red_striped_jasper_gem.json
