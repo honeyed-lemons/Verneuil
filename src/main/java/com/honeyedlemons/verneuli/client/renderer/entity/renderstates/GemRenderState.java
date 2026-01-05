@@ -6,6 +6,5 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class GemRenderState extends HumanoidRenderState {
     public GemAppearanceData gemAppearanceData;
-
     public GemVariant gemVariant;
 }

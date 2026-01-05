@@ -41,6 +41,7 @@ public class GemAppearanceData {
 		this.setLayerData(layerData);
 	}
 
+
 	public Map<String,Integer> getColorData()
 	{
 		return this.ColorData;

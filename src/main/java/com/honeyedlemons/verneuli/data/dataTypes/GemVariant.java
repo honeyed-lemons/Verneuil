@@ -5,12 +5,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
@@ -23,6 +26,7 @@ public final class GemVariant {
 			ItemStack.STRICT_CODEC.fieldOf("gem_item").forGetter(GemVariant::gemItem),
 			Codec.STRING.fieldOf("type").forGetter(GemVariant::type),
 			Codec.STRING.fieldOf("translation").forGetter(GemVariant::translation),
+			SoundEvent.CODEC.optionalFieldOf("talk_sound").forGetter(GemVariant::talkSound),
 			Codec.list(PaletteData.CODEC).optionalFieldOf("palettes").forGetter(GemVariant::palettes),
 			Codec.unboundedMap(Codec.STRING, Codec.list(Codec.STRING)).optionalFieldOf("variants").forGetter(GemVariant::variants),
 			Codec.list(LayerData.CODEC).optionalFieldOf("layers").forGetter(GemVariant::layers),
@@ -42,6 +46,7 @@ public final class GemVariant {
 	private final ItemStack gemItem;
 	private final String type;
 	private final String translation;
+	private final Optional<Holder<SoundEvent>> talkSound;
 	private final Optional<List<PaletteData>> palettes;
 	private final Optional<Map<String, List<String>>> variants;
 	private final Optional<List<LayerData>> layers;
@@ -53,6 +58,7 @@ public final class GemVariant {
 			ItemStack gemItem,
 			String type,
 			String translation,
+			Optional<Holder<SoundEvent>> talkSound,
 			Optional<List<PaletteData>> palettes,
 			Optional<Map<String, List<String>>> variants,
 			Optional<List<LayerData>> layers,
@@ -62,6 +68,7 @@ public final class GemVariant {
 		this.gemItem = gemItem;
 		this.type = type;
 		this.translation = translation;
+		this.talkSound = talkSound;
 		this.palettes = palettes;
 		this.variants = variants;
 		this.layers = layers;
@@ -69,7 +76,7 @@ public final class GemVariant {
 	}
 
 	public GemVariant() {
-		this(Optional.empty(), Optional.empty(), null, null, null, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		this(Optional.empty(), Optional.empty(), null, null, null, null, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	public Optional<Holder<DefaultGemVariant>> parent() {
@@ -118,6 +125,13 @@ public final class GemVariant {
 			return parent().get().value().layers();
 		}
 		return layers;
+	}
+	public Optional<Holder<SoundEvent>> talkSound() {
+		if (this.talkSound.isEmpty() && parent().isPresent())
+		{
+			return parent().get().value().talkSound();
+		}
+		return talkSound;
 	}
 
 	public Optional<BlockMineralDataMap.MineralData> crux() {

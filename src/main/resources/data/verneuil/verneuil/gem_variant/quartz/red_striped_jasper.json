@@ -1,5 +1,5 @@
 {
-  "entity" : "verneuil:quartz",
+  "parent" : "verneuil:quartz",
   "gem_item": {
     "id" : "verneuil:red_striped_jasper_gem",
     "count" : 1
@@ -34,31 +34,29 @@
   ],
   "variants": {
     "hair": [
-      "hair_1",
-      "hair_2",
-      "hair_3",
-      "hair_4",
-      "hair_5",
-      "hair_6"
+      "bangs",
+      "messy",
+      "pearl",
+      "shy",
+      "swoop",
+      "widow"
     ],
     "gem": [
       "back",
-      "back_of_head",
       "belly",
       "chest",
+      "eye_left",
+      "eye_right",
       "forehead",
-      "left_cheek",
-      "left_eye",
-      "left_hand",
-      "left_knee",
-      "left_shoulder",
+      "hand_left",
+      "hand_right",
+      "head_back",
+      "head_top",
+      "knee_left",
+      "knee_right",
       "nose",
-      "right_cheek",
-      "right_eye",
-      "right_hand",
-      "right_knee",
-      "right_shoulder",
-      "top_of_head"
+      "shoulder_left",
+      "shoulder_right"
     ],
     "markings": [
       "tiger","stripe"

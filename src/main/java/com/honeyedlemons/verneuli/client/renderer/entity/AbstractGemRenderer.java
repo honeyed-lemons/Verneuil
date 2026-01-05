@@ -6,13 +6,17 @@ import com.honeyedlemons.verneuli.client.renderer.entity.renderstates.GemRenderS
 import com.honeyedlemons.verneuli.entities.gems.AbstractGem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -78,5 +82,13 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
 			poseStack.translate(0.0F, (renderState.boundingBoxHeight + 0.1F) / scale, 0.0F);
 			poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 		}
+	}
+	@Override
+	protected HumanoidModel.@NotNull ArmPose getArmPose(AbstractGem gem, @NotNull HumanoidArm arm) {
+		if (gem.getMainArm() == arm && gem.isAggressive() && gem.getMainHandItem().is(item -> item.value() instanceof BowItem))
+			return HumanoidModel.ArmPose.BOW_AND_ARROW;
+		if (gem.getMainArm() == arm && gem.isAggressive() && gem.getMainHandItem().is(item -> item.value() instanceof CrossbowItem))
+			return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
+		return HumanoidModel.ArmPose.EMPTY;
 	}
 }

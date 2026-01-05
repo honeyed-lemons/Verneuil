@@ -14,7 +14,6 @@ import com.honeyedlemons.verneuli.entities.TamableMob;
 import com.honeyedlemons.verneuli.util.Palettes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -22,6 +21,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.DifficultyInstance;
@@ -33,14 +34,19 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.Tags;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
@@ -48,16 +54,22 @@ import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableMeleeAttack;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.BowAttack;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.LeapAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowOwner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.StrafeTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.*;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.custom.NearbyItemsSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -65,10 +77,11 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<AbstractGem>, OwnableEntity {
+public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<AbstractGem>, OwnableEntity, RangedAttackMob {
 
     public AbstractGem(EntityType<? extends AbstractGem> entityType, Level level) {
         super(entityType, level);
+        this.setCanPickUpLoot(true);
     }
 
 
@@ -76,17 +89,31 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         return LivingEntity.createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 32)
                 .add(Attributes.ATTACK_DAMAGE, 1)
+                .add(Attributes.MAX_HEALTH,20)
                 .add(Attributes.MOVEMENT_SPEED, 0.35F);
     }
 
+	//region SaveData
+	@Override
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+    }
+
     @Override
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setCanPickUpLoot(input.getBooleanOr("CanPickUpLoot", true));
+    }
+	//endregion
+
+	//region Interactions
+	@Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
         if (this.level().isClientSide() || hand.equals(InteractionHand.OFF_HAND))
-        {
-            return InteractionResult.PASS;
-        }
+            return InteractionResult.SUCCESS_SERVER;
+
         ServerLevel serverLevel = (ServerLevel) this.level();
 
         if (!player.isCrouching())
@@ -94,22 +121,33 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
             if (!this.isTame())
             {
                 tame(player,getTameMessage());
+                this.talk();
                 return InteractionResult.SUCCESS;
             }
-            else if (this.isOwnedBy(player))
-            {
-                if (item instanceof DyeItem dyeItem)
+			if (this.isOwnedBy(player))
+			{
+				if (item instanceof DyeItem dyeItem)
+				{
+					ApplyDye("insignia",itemstack,dyeItem,player);
+					return InteractionResult.CONSUME;
+				}
+                if (item instanceof ShearsItem )
                 {
-                    ApplyDye("insignia",itemstack,dyeItem,player);
+                    cycleGemLayer("hair");
+                    this.playSound(SoundEvents.SHEARS_SNIP, 1.0F, 1.0F);
                     return InteractionResult.SUCCESS;
                 }
-                if ((itemEquippable(itemstack)) && equipItemIfPossible(serverLevel,itemstack) != ItemStack.EMPTY)
-                {
-                    itemstack.consume(1,player);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-        }
+				if (itemEquippable(itemstack))
+				{
+					ItemStack equipped = equipItemIfPossible(serverLevel,itemstack.copy());
+					if (!equipped.isEmpty())
+					{
+						itemstack.consume(1,player);
+						return InteractionResult.CONSUME;
+					}
+				}
+			}
+		}
         else
         {
             if (this.isOwnedBy(player))
@@ -117,7 +155,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
                 if (item instanceof DyeItem dyeItem)
                 {
                     ApplyDye("insignia",itemstack,dyeItem,player);
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.CONSUME;
                 }
                 this.cycleMovementType();
                 Component component;
@@ -130,17 +168,42 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 				};
                 if (component != null)
                     player.displayClientMessage(component, false);
+                this.talk();
+                return InteractionResult.SUCCESS;
             }
         }
 
         return InteractionResult.PASS;
     }
 
-    public boolean itemEquippable(ItemStack item)
-    {
+    public boolean itemEquippable(ItemStack item) {
         return item.getTags().anyMatch(key ->
                 (key == (Tags.Items.ARMORS) && canWearArmor()) || key == Tags.Items.TOOLS);
     }
+
+    @Override
+    public boolean canHoldItem(ItemStack stack) {
+        return stack.getTags().anyMatch(key -> key != Tags.Items.ARMORS);
+    }
+
+    @Override
+    public boolean wantsToPickUp(ServerLevel serverLevel, ItemStack stack) {
+        return itemEquippable(stack) && canHoldItem(stack) && this.isMovementType(0);
+    }
+
+    public boolean wantsToPickUp(ItemStack stack) {
+        return itemEquippable(stack) && canHoldItem(stack) && this.isMovementType(0);
+    }
+
+    @Override
+    protected void hurtArmor(DamageSource damageSource, float damage) {
+        this.doHurtEquipment(damageSource, damage, EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
+    }
+    @Override
+    protected void hurtHelmet(DamageSource damageSource, float damage) {
+        this.doHurtEquipment(damageSource, damage, EquipmentSlot.HEAD);
+    }
+
     abstract boolean canWearArmor();
     public void ApplyDye(String paletteName, ItemStack stack, DyeItem dyeItem, Player player)
     {
@@ -149,23 +212,22 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         stack.consume(1, player);
     }
 
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        this.updateSwingTime();
-    }
-
     public Component getTameMessage()
     {
         return Component.translatable("verneuil.gem.tamemessage", this.getDisplayName());
     }
-
-    public abstract Boolean canFight();
+	//endregion
 
 	//region Brain
 	@Override
     protected Brain.@NotNull Provider<?> brainProvider() {
         return new SmartBrainProvider<>(this);
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        this.updateSwingTime();
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -177,12 +239,19 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         tickBrain(this);
     }
 
+    public void talk()
+    {
+        this.playTalkSound();
+    }
+
     @Override
     public List<ExtendedSensor<AbstractGem>> getSensors() {
         return ObjectArrayList.of(
                 new NearbyLivingEntitySensor<AbstractGem>()
                         .setRadius(12f),
-                new HurtBySensor<>()
+                new HurtBySensor<>(),
+                new NearbyItemsSensor<AbstractGem>()
+                        .setRadius(6)
         );
     }
 
@@ -199,6 +268,10 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
     public BrainActivityGroup<AbstractGem> getIdleTasks() {
         return BrainActivityGroup.idleTasks(
                 new FirstApplicableBehaviour<AbstractGem>(
+                        new FollowEntity<>()
+                                .following(AbstractGem::followItem)
+                                .stopFollowingWithin(1)
+                        .cooldownForBetween(30,60),
                         new SetRandomLookTarget<>())
                         .cooldownForBetween(30,60),
                         new SetPlayerLookTarget<>(),
@@ -218,18 +291,76 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
                         new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))));
     }
 
-    @Override
-    public BrainActivityGroup<AbstractGem> getFightTasks() { // These are the tasks that handle fighting
+	//region Combat
+	@Override
+    public BrainActivityGroup<AbstractGem> getFightTasks() {
         return BrainActivityGroup.fightTasks(
-                new InvalidateAttackTarget<>(), // Cancel fighting if the target is no longer valid
-                new SetWalkTargetToAttackTarget<>(),      // Set the walk target to the attack target
-                new AnimatableMeleeAttack<>(0)); // Melee attack the target if close enough
+                new InvalidateAttackTarget<>(),
+                new FirstApplicableBehaviour<>(
+                        new StrafeTarget<>()
+                                .stopStrafingWhen(entity -> !isHoldingBow(entity) || !entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET))
+                                .startCondition(AbstractGem::isHoldingBow)
+                                .whenStopping(Mob::stopInPlace)
+                                .whenStarting(gem -> this.setAggressive(true)),
+                        new SetWalkTargetToAttackTarget<>()
+                ),
+                new LeapAtTarget<>(20)
+                        .verticalJumpStrength((mod, gem) -> 0.7f)
+                        .jumpStrength((mob, gem) -> 0.7f)
+                        .startCondition(AbstractGem::isHoldingMace),
+                new FirstApplicableBehaviour<>(
+                        new BowAttack<>(20)
+                                .whenStopping(gem -> this.setAggressive(false))
+                                .startCondition(AbstractGem::isHoldingBow),
+                        new AnimatableMeleeAttack<>(0)
+                )
+        );
     }
+    public abstract Boolean canFight();
 
     public boolean canAttack(@NotNull LivingEntity entity)
     {
         return this.canFight() && !this.isOwnedBy(entity) && !this.doesShareOwner(entity) && (entity instanceof Enemy || this.getBrain().isMemoryValue(MemoryModuleType.HURT_BY_ENTITY, entity));
     }
+
+    public static ItemEntity followItem(@NotNull LivingEntity entity)
+    {
+        var memory = entity.getBrain().getMemory(SBLMemoryTypes.NEARBY_ITEMS.get());
+		return memory.map(List::getFirst).orElse(null);
+	}
+    private static boolean isHoldingBow(LivingEntity livingEntity) {
+        return livingEntity.isHolding(stack -> stack.getItem() instanceof BowItem);
+    }
+    private static boolean isHoldingMace(LivingEntity livingEntity) {
+        return livingEntity.isHolding(stack -> stack.getItem() instanceof MaceItem);
+    }
+    @Override
+    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+        ItemStack weapon = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> item instanceof BowItem));
+        ItemStack projectile = this.getProjectile(weapon);
+        AbstractArrow abstractarrow = this.getArrow(projectile, distanceFactor, weapon);
+        Item item = weapon.getItem();
+
+        if (item instanceof ProjectileWeaponItem weaponItem) {
+            abstractarrow = weaponItem.customArrow(abstractarrow, projectile, weapon);
+        }
+
+		Level level = this.level();
+        if (level instanceof ServerLevel serverlevel) {
+            double d0 = target.getX() - this.getX();
+            double d1 = target.getY(0.3) - abstractarrow.getY();
+            double d2 = target.getZ() - this.getZ();
+			double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+			Projectile.spawnProjectileUsingShoot(abstractarrow, serverlevel, projectile, d0, d1 + d3 * (double)0.2F, d2, 1.6F, (float)(14 - serverlevel.getDifficulty().getId() * 4));
+        }
+
+        this.playSound(SoundEvents.ARROW_SHOOT, 1.0F, (1.0F / this.getRandom().nextFloat() * 0.4F + 1.2F) + 1 * 0.5F);
+    }
+
+    protected AbstractArrow getArrow(ItemStack arrow, float velocity, @Nullable ItemStack weapon) {
+        return ProjectileUtil.getMobArrow(this, arrow, velocity, weapon);
+    }
+	//endregion
 	//endregion
 
 	//region GemAppearanceData Code
@@ -271,17 +402,41 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         setGemAppearanceData(appearanceData);
     }
 
-    public Map<String,String> getGemLayerData()
-    {
-        return getGemAppearanceData().getLayerData();
-    }
-
-    public void AddGemLayer(String layerName, String layerData) {
+    public void addGemLayer(String layerName, String layerData) {
         var appearanceData = getGemAppearanceData();
         appearanceData.addLayerData(layerName,layerData);
         this.setGemLayerData(appearanceData.getLayerData());
     }
-    public void GeneratePaletteColors(ServerLevelAccessor server) {
+
+    public String getGemLayerVariant(String layerName)
+    {
+        var layerData = getGemAppearanceData().getLayerData();
+        return layerData.get(layerName);
+    }
+
+    public void cycleGemLayer(String layerName)
+    {
+        var layerData = new HashMap<>(getGemAppearanceData().getLayerData());
+        if (getGemVariant().variants().isEmpty())
+            return;
+
+        var variantList = getGemVariant().variants().get().get(layerName);
+
+        var layerIndex = variantList.indexOf(getGemLayerVariant(layerName));
+
+        if (layerIndex != variantList.size() - 1)
+			layerIndex++;
+        else
+            layerIndex = 0;
+
+        var selectedLayer = variantList.get(layerIndex);
+
+        layerData.put(layerName,selectedLayer);
+
+        this.setGemLayerData(layerData);
+    }
+
+    public void generatePaletteColors(ServerLevelAccessor server) {
         var random = server.getRandom();
         if (this.getGemVariant().palettes().isEmpty())
             return;
@@ -301,7 +456,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         }
     }
 
-    public void GenerateLayerVariants(ServerLevelAccessor server){
+    public void generateLayerVariants(ServerLevelAccessor server){
         var random = server.getRandom();
         if (this.getGemVariant().variants().isEmpty())
             return;
@@ -310,7 +465,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 
         variants.forEach((type, variantList)-> {
             var picked = random.nextInt(variantList.size());
-            this.AddGemLayer(type, variantList.get(picked));
+            this.addGemLayer(type, variantList.get(picked));
         });
     }
 	//endregion
@@ -330,9 +485,9 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         this.setData(VerneuilDataAttachments.GEM_VARIANT,holder);
         ServerLevel serverLevel = (ServerLevel) this.level();
         if (Boolean.TRUE.equals(generatePalette))
-            GeneratePaletteColors(serverLevel);
+            generatePaletteColors(serverLevel);
         if (Boolean.TRUE.equals(generateVariants))
-            GenerateLayerVariants(serverLevel);
+            generateLayerVariants(serverLevel);
     }
 
     public GemVariant getGemVariant(String name) {
@@ -354,7 +509,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         return gemVariant.map(Holder.Reference::value).orElse(null);
     }
 
-    public void GenerateGemVariant(ServerLevelAccessor server){
+    public void generateGemVariant(ServerLevelAccessor server){
         var random = server.getRandom();
 
         final var registry = registryAccess().lookupOrThrow(Registries.ENTITY_TYPE);
@@ -372,7 +527,23 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
     }
 	//endregion
 
-    public void saveGem(ServerLevel server)
+
+	//region Sound
+
+    public SoundEvent getTalkSound() {
+        var talkSound = this.getGemVariant().talkSound().orElse(null);
+        return talkSound != null ? talkSound.value() : null;
+    }
+
+    public void playTalkSound()
+    {
+        this.playSound(getTalkSound(), 1.0F, this.getVoicePitch());
+    }
+
+	//endregion
+
+    //region Death
+	public void saveGem(ServerLevel server)
     {
         var savedData = server.getDataStorage().computeIfAbsent(GemSavedData.ID);
         try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(this.problemPath(), Verneuil.LOGGER)) {
@@ -424,7 +595,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerLevel level, DamageSource damageSource) {
+    protected void dropAllDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource) {
         super.dropAllDeathLoot(level,damageSource);
         level.broadcastEntityEvent(this, (byte)60);
         var gemItem = createAndSaveGemItem(level, damageSource);
@@ -447,7 +618,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
         {
             GemVariant gemVariant = this.getGemVariant();
             if (gemVariant.type() == null)
-                this.GenerateGemVariant(server);
+                this.generateGemVariant(server);
         }
 
         return super.finalizeSpawn(server, difficulty, spawnReason, spawnGroupData);
@@ -480,4 +651,5 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 
         return flag;
     }
+	//endregion
 }

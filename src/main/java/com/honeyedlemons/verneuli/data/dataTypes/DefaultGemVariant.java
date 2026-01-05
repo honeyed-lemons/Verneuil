@@ -8,6 +8,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.Instrument;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +20,15 @@ public record DefaultGemVariant(
         Optional<ResourceLocation> entity,
         Optional<List<PaletteData>> palettes,
         Optional<Map<String, List<String>>> variants,
-        Optional<List<LayerData>> layers) {
+        Optional<List<LayerData>> layers,
+        Optional<Holder<SoundEvent>> talkSound) {
 
     public static final Codec<DefaultGemVariant> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.optionalFieldOf("entity").forGetter(DefaultGemVariant::entity),
             Codec.list(PaletteData.CODEC).optionalFieldOf("palettes").forGetter(DefaultGemVariant::palettes),
             Codec.unboundedMap(Codec.STRING, Codec.list(Codec.STRING)).optionalFieldOf("variants").forGetter(DefaultGemVariant::variants),
-            Codec.list(LayerData.CODEC).optionalFieldOf("layers").forGetter(DefaultGemVariant::layers)
+            Codec.list(LayerData.CODEC).optionalFieldOf("layers").forGetter(DefaultGemVariant::layers),
+            SoundEvent.CODEC.optionalFieldOf("talk_sound").forGetter(DefaultGemVariant::talkSound)
     ).apply(instance, DefaultGemVariant::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DefaultGemVariant> STREAM_CODEC = StreamCodec.composite(
@@ -36,6 +40,8 @@ public record DefaultGemVariant(
             DefaultGemVariant::variants,
             ByteBufCodecs.optional(LayerData.STREAM_CODEC.apply(ByteBufCodecs.list())),
             DefaultGemVariant::layers,
+            ByteBufCodecs.optional(SoundEvent.STREAM_CODEC),
+            DefaultGemVariant::talkSound,
             DefaultGemVariant::new
     );
 
