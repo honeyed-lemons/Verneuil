@@ -1,0 +1,15 @@
+{
+  "parent": "verneuil:quartz",
+  "gem_item": {
+    "id": "verneuil:carnelian_gem",
+    "count": 1
+  },
+  "type": "carnelian",
+  "translation": "verneuil.gemvariant.carnelian",
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}

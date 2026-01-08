@@ -1,20 +1,37 @@
 {
-  "itemGroup.verneuil": "Example Mod Tab",
-  "block.verneuil.example_block": "Example Block",
-  "item.verneuil.example_item": "Example Item",
   "vernueil.commands.randomize.success.single": "Randomized %s's appearance!",
   "vernueil.commands.randomize.success.multiple": "Randomized %s gems' appearances!",
   "vernueil.commands.randomize.failure": "Failed randomizing appearance, are they not a gem?",
+
   "verneuil.configuration.title": "Verneuil Configs",
   "verneuil.configuration.section.verneuil.common.toml": "Verneuil Configs",
   "verneuil.configuration.section.verneuil.common.toml.title": "Verneuil Configs",
   "verneuil.configuration.reformTime": "Reform Time",
   "verneuil.configuration.canPickUp": "Gem Equipment Auto Pickup",
   "verneuil.gemitem.warning": "This gem is either already in the world, or no longer exists, please delete this item!",
-  "verneuil.gemvariant.red_striped_jasper": "Red Striped Jasper",
-  "verneuil.gemvariant.amethyst": "Amethyst",
+
   "verneuil.gem.tamemessage": "Claimed %s!",
+
   "verneuil.gem.movementype.0": "%s is wandering.",
   "verneuil.gem.movementype.1": "%s will stay still.",
-  "verneuil.gem.movementype.2": "%s will follow you."
+  "verneuil.gem.movementype.2": "%s will follow you.",
+
+  "verneuil.gemvariant.amethyst": "Amethyst",
+  "verneuil.gemvariant.carnelian": "Carnelian",
+  "verneuil.gemvariant.rose_quartz": "Rose Quartz",
+  "verneuil.gemvariant.citrine": "Citrine",
+  "verneuil.gemvariant.red_striped_jasper": "Red Striped Jasper",
+  "verneuil.gemvariant.ocean_jasper": "Ocean Jasper",
+  "verneuil.gemvariant.zebra_jasper": "Zebra Jasper",
+  "verneuil.gemvariant.biggs_jasper": "Biggs Jasper",
+
+  "item.verneuil.amethyst_gem" : "Amethyst Gem",
+  "item.verneuil.carnelian_gem" : "Carnelian Gem",
+  "item.verneuil.rose_quartz_gem" : "Rose Quartz Gem",
+  "item.verneuil.citrine_gem" : "Citrine Gem",
+  "item.verneuil.red_striped_jasper_gem" : "Red Striped Jasper Gem",
+  "item.verneuil.ocean_jasper_gem" : "Ocean Jasper Gem",
+  "item.verneuil.zebra_jasper_gem" : "Zebra Jasper Gem",
+  "item.verneuil.biggs_jasper_gem" : "Biggs Jasper Gem"
+
 }

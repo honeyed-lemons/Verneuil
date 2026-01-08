@@ -14,10 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<ResourceLocation> entity,
 						 ItemStack gemItem, String type, String translation, Optional<Holder<SoundEvent>> talkSound,
@@ -60,6 +57,22 @@ public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<Re
 	public Optional<Map<String, List<String>>> variants() {
 		if (this.variants.isEmpty() && parent().isPresent()) {
 			return parent().get().value().variants();
+		}
+		if (this.variants.isPresent() && parent().isPresent() && parent().get().value().variants().isPresent()) {
+			var parentVariants = parent().get().value().variants().get();
+			Map<String, List<String>> newVariants = new HashMap<>();
+
+			this.variants.get().forEach((variantType, list) -> {
+				List<String> parentList = parentVariants.get(variantType);
+				if (list.isEmpty() && !parentList.isEmpty()) {
+					newVariants.put(variantType, parentList);
+				}
+				else
+				{
+					newVariants.put(variantType,list);
+				}
+			});
+			return Optional.of(newVariants);
 		}
 		return variants;
 	}

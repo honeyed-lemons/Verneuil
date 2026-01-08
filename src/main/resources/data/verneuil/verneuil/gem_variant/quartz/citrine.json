@@ -1,0 +1,15 @@
+{
+  "parent": "verneuil:quartz",
+  "gem_item": {
+    "id": "verneuil:citrine_gem",
+    "count": 1
+  },
+  "type": "citrine",
+  "translation": "verneuil.gemvariant.citrine",
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}

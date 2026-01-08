@@ -1,11 +1,23 @@
-// 1.21.10	2026-01-03T00:38:31.5927434	Model Definitions - verneuil
+// 1.21.10	2026-01-08T17:08:19.2029109	Model Definitions - verneuil
 0be6ad687de18e5a301dd7f72e644c67652a35c3 assets/verneuil/blockstates/drained_block.json
 de12bf7d3993c472abe1baf731fae9510abc4aff assets/verneuil/blockstates/geode.json
 971878068fa79cae03f5adf0251ac8cc858a157f assets/verneuil/items/amethyst_gem.json
+6ea8ce21174cd7a874c9a1a9578c178e6b24e4c0 assets/verneuil/items/biggs_jasper_gem.json
+70fc5eae53a8e007e4f27f96bb2e334dfeea550b assets/verneuil/items/carnelian_gem.json
+febd63fae710eeee61861c6889166ad15c4b4c9d assets/verneuil/items/citrine_gem.json
 b0d8293692f49deda4d23889043c7cdf5aa17f14 assets/verneuil/items/drained_block.json
 64b7594cd06abd9c0f35688db2c8ce77330dd0c8 assets/verneuil/items/geode.json
+08fe4021a4164b009ac9665e1e0445a0f393c631 assets/verneuil/items/ocean_jasper_gem.json
 361023aeb3787179de3d880baab4c1d4920237a7 assets/verneuil/items/red_striped_jasper_gem.json
+114bc2db02cfd80cfd30483f9109dbed5c7bb53a assets/verneuil/items/rose_quartz_gem.json
+593b0bd8a1504ca23ec9e94b3ba3d33393fe3b07 assets/verneuil/items/zebra_jasper_gem.json
 78b754d1e4aaeb270829cef43b7d4b8c906d6fb4 assets/verneuil/models/block/drained_block.json
 28e873be36062c0fe749ad97ac6865f0a2bc6031 assets/verneuil/models/block/geode.json
 97f199d71e94e9fc6298bfa4618d37f9c22c4fdd assets/verneuil/models/item/amethyst_gem.json
+452ccd479999a3f699b62b90e191ff7e188a5d88 assets/verneuil/models/item/biggs_jasper_gem.json
+b21d0c8daae310f4964d73185c659b4a37540658 assets/verneuil/models/item/carnelian_gem.json
+164707ef4236155d89d83267c31b6b161eb669f7 assets/verneuil/models/item/citrine_gem.json
+0be82f9449f50619249b8e76b1672cf71f5ebb7a assets/verneuil/models/item/ocean_jasper_gem.json
 3730fb4962f2fd2f0457c0cf037beb6ddf8302b2 assets/verneuil/models/item/red_striped_jasper_gem.json
+bd60eb8048da0754b593ccb04ebcdc3f33198b77 assets/verneuil/models/item/rose_quartz_gem.json
+db2d3609566d2d79d7773538b5d1bd8bc42934e6 assets/verneuil/models/item/zebra_jasper_gem.json

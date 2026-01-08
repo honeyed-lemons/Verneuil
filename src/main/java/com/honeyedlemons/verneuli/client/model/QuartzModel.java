@@ -29,9 +29,14 @@ public class QuartzModel extends AbstractGemModel {
 
 		PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(32, 35).addBox(0.5F, -0.25F, -2.25F, 4.0F, 11.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, 13.0F, 0.0F));
 
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -7.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).texOffs(68, 23).addBox(-4.0F, -7.0F, -4.5F, 8.0F, 8.0F, 2.0F, new CubeDeformation(0.26F)).texOffs(32, 0).addBox(-4.0F, -7.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -1.0F, 0.0F));
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -7.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
+				.texOffs(32, 0).addBox(-4.0F, -7.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -1.0F, 0.0F));
 
-		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(56, 0).addBox(-7.0F, -5.0F, -2.0F, 3.0F, 4.0F, 4.0F, new CubeDeformation(0.25F)).texOffs(56, 0).mirror().addBox(4.0F, -5.0F, -2.0F, 3.0F, 4.0F, 4.0F, new CubeDeformation(0.25F)).mirror(false).texOffs(64, 0).addBox(-2.0F, -9.0F, -3.0F, 4.0F, 8.0F, 8.0F, new CubeDeformation(0.25F)).texOffs(69, 16).addBox(-2.0F, -9.0F, -6.5F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(56, 0).addBox(-7.0F, -5.0F, -2.0F, 3.0F, 4.0F, 4.0F, new CubeDeformation(0.25F))
+				.texOffs(56, 0).mirror().addBox(4.0F, -5.0F, -2.0F, 3.0F, 4.0F, 4.0F, new CubeDeformation(0.25F)).mirror(false)
+				.texOffs(64, 0).addBox(-2.0F, -9.0F, -3.0F, 4.0F, 8.0F, 8.0F, new CubeDeformation(0.25F))
+				.texOffs(69, 16).addBox(-2.0F, -9.0F, -6.5F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.25F))
+				.texOffs(68, 23).addBox(-4.0F, -7.0F, -4.5F, 8.0F, 8.0F, 2.0F, new CubeDeformation(0.26F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 16).addBox(-5.0F, -6.0F, -3.0F, 10.0F, 13.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 6.0F, 0.0F));
 

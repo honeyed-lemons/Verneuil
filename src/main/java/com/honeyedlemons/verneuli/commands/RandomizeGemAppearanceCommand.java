@@ -25,6 +25,7 @@ public class RandomizeGemAppearanceCommand {
 			if (entity instanceof AbstractGem gem) {
 				gem.generatePaletteColors(server);
 				gem.generateLayerVariants(server);
+				gem.adaptUniformColors();
 				count++;
 			}
 		}
