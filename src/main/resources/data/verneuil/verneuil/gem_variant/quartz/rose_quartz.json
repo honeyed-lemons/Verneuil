@@ -1,0 +1,15 @@
+{
+  "parent": "verneuil:quartz",
+  "gem_item": {
+    "id": "verneuil:rose_quartz_gem",
+    "count": 1
+  },
+  "type": "rose_quartz",
+  "translation": "verneuil.gemvariant.rose_quartz",
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}

@@ -3,7 +3,13 @@
     "verneuil:quartz": {
       "gem_variants": [
         "verneuil:quartz/amethyst",
-        "verneuil:quartz/red_striped_jasper"
+        "verneuil:quartz/red_striped_jasper",
+        "verneuil:quartz/zebra_jasper",
+        "verneuil:quartz/ocean_jasper",
+        "verneuil:quartz/biggs_jasper",
+        "verneuil:quartz/citrine",
+        "verneuil:quartz/rose_quartz",
+        "verneuil:quartz/carnelian"
       ]
     }
   }

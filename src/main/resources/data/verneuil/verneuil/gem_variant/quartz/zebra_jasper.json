@@ -1,0 +1,24 @@
+{
+  "parent": "verneuil:quartz_one_marking",
+  "gem_item": {
+    "id": "verneuil:zebra_jasper_gem",
+    "count": 1
+  },
+  "type": "zebra_jasper",
+  "translation": "verneuil.gemvariant.zebra_jasper",
+  "variants": {
+    "hair": [],
+    "gem": [],
+    "markings": [
+      "zebra"
+    ],
+    "uniform": [],
+    "insignia": []
+  },
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}

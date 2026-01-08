@@ -34,10 +34,10 @@ public class Verneuil {
 
 		VerneuilBlocks.BLOCK_ENTITY_TYPES.register(modEventBus);
 		VerneuilBlocks.BLOCKS.register(modEventBus);
-		VerneuilItems.ITEMS.register(modEventBus);
 		VerneuilDataComponents.DATA_COMPONENTS.register(modEventBus);
 		VerneuilDataAttachments.ATTACHMENT_TYPES.register(modEventBus);
 		VerneuilEntities.ENTITY_TYPES.register(modEventBus);
+		VerneuilItems.ITEMS.register(modEventBus);
 
 		CREATIVE_MODE_TABS.register(modEventBus);
 

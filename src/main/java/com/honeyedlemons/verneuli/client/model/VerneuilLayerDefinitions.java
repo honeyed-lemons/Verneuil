@@ -33,5 +33,4 @@ public class VerneuilLayerDefinitions {
 		var resourceLocation = ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, path);
 		return new ArmorModelSet<>(new ModelLayerLocation(resourceLocation, "helmet"), new ModelLayerLocation(resourceLocation, "chestplate"), new ModelLayerLocation(resourceLocation, "leggings"), new ModelLayerLocation(resourceLocation, "boots"));
 	}
-
 }

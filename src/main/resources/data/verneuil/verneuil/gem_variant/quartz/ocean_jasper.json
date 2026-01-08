@@ -1,0 +1,27 @@
+{
+  "parent": "verneuil:quartz_two_marking",
+  "gem_item": {
+    "id": "verneuil:ocean_jasper_gem",
+    "count": 1
+  },
+  "type": "ocean_jasper",
+  "translation": "verneuil.gemvariant.ocean_jasper",
+  "variants": {
+    "hair": [],
+    "gem": [],
+    "markings": [
+      "ocean"
+    ],
+    "secondary_markings": [
+      "ocean"
+    ],
+    "uniform": [],
+    "insignia": []
+  },
+  "crux": {
+    "mineral_data": {
+      "Silica": 1,
+      "Carbon": 1
+    }
+  }
+}

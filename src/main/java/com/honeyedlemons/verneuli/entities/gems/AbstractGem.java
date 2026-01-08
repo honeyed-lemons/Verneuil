@@ -147,7 +147,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 		else {
 			if (this.isOwnedBy(player)) {
 				if (item instanceof DyeItem dyeItem) {
-					ApplyDye("insignia", itemstack, dyeItem, player);
+					ApplyDye("uniform", itemstack, dyeItem, player);
 					return InteractionResult.CONSUME;
 				}
 				this.cycleMovementType();
@@ -207,23 +207,72 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 
 	@Override
 	public List<ExtendedSensor<AbstractGem>> getSensors() {
-		return ObjectArrayList.of(new NearbyLivingEntitySensor<AbstractGem>().setRadius(12f), new HurtBySensor<>(), new NearbyItemsSensor<AbstractGem>().setRadius(6));
+		return ObjectArrayList.of(
+				new NearbyLivingEntitySensor<AbstractGem>()
+						.setRadius(12f),
+				new HurtBySensor<>(),
+				new NearbyItemsSensor<AbstractGem>()
+						.setRadius(6));
 	}
 
 	@Override
 	public BrainActivityGroup<AbstractGem> getCoreTasks() {
-		return BrainActivityGroup.coreTasks(new LookAtTarget<>().runFor(entity -> entity.getRandom().nextIntBetweenInclusive(40, 100)).whenStopping(entity -> this.getBrain().eraseMemory(MemoryModuleType.LOOK_TARGET)), new MoveToWalkTarget<>());
+		return BrainActivityGroup.coreTasks(
+				new LookAtTarget<>()
+						.runFor(entity -> entity.getRandom().nextIntBetweenInclusive(40, 100))
+						.whenStopping(entity -> this.getBrain().eraseMemory(MemoryModuleType.LOOK_TARGET)),
+				new MoveToWalkTarget<>());
 	}
 
 	@Override
 	public BrainActivityGroup<AbstractGem> getIdleTasks() {
-		return BrainActivityGroup.idleTasks(new FirstApplicableBehaviour<AbstractGem>(new FollowEntity<>().following(AbstractGem::followItem).stopFollowingWithin(0).cooldownForBetween(30, 60), new SetRandomLookTarget<>()).cooldownForBetween(30, 60), new SetPlayerLookTarget<>(), new FollowOwner<>().teleportToTargetAfter(32).startCondition(this::isFollowing), new TargetOrRetaliate<>().isAllyIf((attacker, us) -> this.doesShareOwner(attacker)).attackablePredicate(this::canAttack), new MoveToWalkTarget<>(), new OneRandomBehaviour<>(new SetRandomWalkTarget<>().speedModifier(0.7f).setRadius(5).cooldownForBetween(100, 200).startCondition(this::isWandering), new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))));
+		return BrainActivityGroup.idleTasks(
+				new FirstApplicableBehaviour<AbstractGem>(
+						new FollowEntity<>()
+								.following(AbstractGem::followItem)
+								.stopFollowingWithin(0)
+								.cooldownForBetween(30, 60),
+						new SetRandomLookTarget<>())
+						.cooldownForBetween(30, 60),
+				new SetPlayerLookTarget<>(),
+				new FollowOwner<>()
+						.teleportToTargetAfter(32)
+						.startCondition(this::isFollowing),
+				new TargetOrRetaliate<>()
+						.isAllyIf((attacker, us) -> this.doesShareOwner(attacker))
+						.attackablePredicate(this::canAttack),
+				new MoveToWalkTarget<>(),
+				new OneRandomBehaviour<>(
+						new SetRandomWalkTarget<>()
+								.speedModifier(0.7f)
+								.setRadius(5)
+								.cooldownForBetween(100, 200)
+								.startCondition(this::isWandering),
+						new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))));
 	}
 
 	//region Combat
 	@Override
 	public BrainActivityGroup<AbstractGem> getFightTasks() {
-		return BrainActivityGroup.fightTasks(new InvalidateAttackTarget<>(), new FirstApplicableBehaviour<>(new StrafeTarget<>().stopStrafingWhen(entity -> !isHoldingBow(entity) || !entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)).startCondition(AbstractGem::isHoldingBow).whenStopping(Mob::stopInPlace).whenStarting(gem -> this.setAggressive(true)), new SetWalkTargetToAttackTarget<>()), new LeapAtTarget<>(20).verticalJumpStrength((mob, gem) -> 0.7f).jumpStrength((mob, gem) -> 0.7f).startCondition(AbstractGem::isHoldingMace), new FirstApplicableBehaviour<>(new BowAttack<>(20).whenStopping(gem -> this.setAggressive(false)).startCondition(AbstractGem::isHoldingBow), new AnimatableMeleeAttack<>(5), new BlockWithShield<>()));
+		return BrainActivityGroup.fightTasks(new InvalidateAttackTarget<>(),
+				new FirstApplicableBehaviour<>(
+						new StrafeTarget<>()
+								.stopStrafingWhen(entity -> !isHoldingBow(entity) || !entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET))
+								.startCondition(AbstractGem::isHoldingBow)
+								.whenStopping(Mob::stopInPlace)
+								.whenStarting(gem -> this.setAggressive(true)),
+						new SetWalkTargetToAttackTarget<>()),
+				new LeapAtTarget<>(20)
+						.verticalJumpStrength((mob, gem) -> 0.7f)
+						.jumpStrength((mob, gem) -> 0.7f)
+						.startCondition(AbstractGem::isHoldingMace),
+				new FirstApplicableBehaviour<>(
+						new BowAttack<>(20)
+								.whenStopping(gem -> this.setAggressive(false))
+								.startCondition(AbstractGem::isHoldingBow),
+						new AnimatableMeleeAttack<>(5),
+						new BlockWithShield<>()
+								.cooldownForBetween(20,30)));
 	}
 
 	public abstract Boolean canFight();
@@ -379,6 +428,11 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 		addColor(paletteToSet, ColorUtil.colorClosestToDye(referenceColor));
 	}
 
+	public void adaptUniformColors()
+	{
+		this.setColorToClosestDye("insignia", "gem");
+		this.setColorToClosestDye("uniform", "gem");
+	}
 	public void setGemLayerData(Map<String, String> layerData) {
 		var appearanceData = getGemAppearanceData();
 		appearanceData.setLayerData(layerData);
@@ -470,6 +524,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 			generatePaletteColors(serverLevel);
 		if (Boolean.TRUE.equals(generateVariants))
 			generateLayerVariants(serverLevel);
+		this.adaptUniformColors();
 	}
 
 	public Registry<GemVariant> getGemVariantRegistry() {
@@ -548,7 +603,11 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 	}
 
 	public ItemStack createAndSaveGemItem(ServerLevel serverLevel, DamageSource damageSource) {
-		ItemStack gemItem = getGemVariant().gemItem().copy();
+		ItemStack gemItem = getGemVariant().gemItem();
+		if (gemItem == null)
+			return null;
+		gemItem = gemItem.copy();
+
 		gemItem.remove(VerneuilDataComponents.GEM_DATA);
 		GemDataRecord gemData = gemItem.get(VerneuilDataComponents.GEM_DATA);
 
@@ -588,8 +647,6 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 			GemVariant gemVariant = this.getGemVariant();
 			if (gemVariant.type() == null)
 				this.generateGemVariant(server, true);
-			setColorToClosestDye("insignia", "gem");
-			setColorToClosestDye("uniform", "gem");
 		}
 
 		return super.finalizeSpawn(server, difficulty, spawnReason, spawnGroupData);
