@@ -1,0 +1,148 @@
+{
+  "values": {
+    "#c:stones": {
+      "mineral_data": {
+        "mineral_composition": {
+          "carbon": 0.25,
+          "calcium": 0.25
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:sands": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.8,
+          "calcium": 0.2
+        }
+      },
+      "drain_to": "verneuil:drained_dust"
+    },
+    "#minecraft:dirt": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.015,
+          "aluminum": 0.015,
+          "sodium": 0.015,
+          "calcium": 0.015
+        }
+      },
+      "drain_to": "verneuil:drained_soil"
+    },
+    "minecraft:diorite": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.125,
+          "sodium": 0.125,
+          "calcium": 0.125,
+          "carbon": 0.125
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "minecraft:andesite": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.25,
+          "sodium": 0.083,
+          "calcium": 0.083,
+          "lithium": 0.083
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "minecraft:granite": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.083,
+          "sodium": 0.25,
+          "calcium": 0.083,
+          "lithium": 0.083
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/iron": {
+      "mineral_data": {
+        "mineral_composition": {
+          "iron": 1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/coal": {
+      "mineral_data": {
+        "mineral_composition": {
+          "carbon": 0.8,
+          "sulfur": 0.2
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/diamond": {
+      "mineral_data": {
+        "mineral_composition": {
+          "carbon": 1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/gold": {
+      "mineral_data": {
+        "mineral_composition": {
+          "gold": 1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/lapis": {
+      "mineral_data": {
+        "mineral_composition": {
+          "sulfur": 0.4,
+          "calcium": 0.3,
+          "silicon": 0.2,
+          "aluminum": 0.05,
+          "sodium": 0.05
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/emerald": {
+      "mineral_data": {
+        "mineral_composition": {
+          "beryllium": 0.6,
+          "aluminum": 0.35,
+          "silica": 0.1,
+          "chromium": 0.05
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/quartz": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/redstone": {
+      "mineral_data": {
+        "mineral_composition": {
+          "cobalt": 0.8,
+          "iron": 0.1,
+          "nickel": 0.1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    },
+    "#c:ores/copper": {
+      "mineral_data": {
+        "mineral_composition": {
+          "copper": 1
+        }
+      },
+      "drain_to": "verneuil:drained_stone"
+    }
+  }
+}

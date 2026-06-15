@@ -1,13 +1,12 @@
 package com.honeyedlemons.verneuli.blocks;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.honeyedlemons.verneuli.data.dataMaps.BlockMineralDataMap;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
+import com.honeyedlemons.verneuli.data.dataTypes.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -20,11 +19,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GeodeBlockEntity extends BlockEntity {
 
@@ -32,8 +28,7 @@ public class GeodeBlockEntity extends BlockEntity {
 		super(VerneuilBlocks.GEODE_ENTITY.get(), pos, blockState);
 	}
 
-	private final static Map<String, Float> crux = Map.of("Silica", .5f, "Carbon", .5f);
-	private final StoredMineralData geologicalData = new StoredMineralData(new HashMap<>());
+	private final MineralData geologicalData = new MineralData(new HashMap<>());
 
 	public static class GeodeBlock extends Block implements EntityBlock {
 		public GeodeBlock(BlockBehaviour.Properties properties) {
@@ -47,101 +42,86 @@ public class GeodeBlockEntity extends BlockEntity {
 
 		@Override
 		protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-			if (!(level.getBlockEntity(pos) instanceof GeodeBlockEntity Geode) || level.isClientSide())
+			if (!(level.getBlockEntity(pos) instanceof GeodeBlockEntity geode))
 				return InteractionResult.FAIL;
 
-			if (player.isCrouching()) {
-				var ratio = GetRatio(Geode.geologicalData.data);
-				var difference = GetSimilarity(crux, ratio);
-				player.displayClientMessage(Component.literal(difference.toString()), true);
-				return InteractionResult.SUCCESS;
-			}
+			if (!(level instanceof ServerLevel serverLevel))
+				return InteractionResult.FAIL;
 
-			Holder<Block> holder = level.getBlockState(pos.above()).getBlockHolder();
-			var blocKMineralData = holder.getData(BlockMineralDataMap.MINERAL_DATA);
-			if (blocKMineralData != null) {
-				blocKMineralData.data().forEach((key, value) -> Geode.geologicalData.addData(new Pair<>(key, value)));
-				Geode.setChanged();
-			}
-
+			geode.drainBlock(pos.above(),serverLevel);
 			return InteractionResult.SUCCESS;
 		}
 
-
-		public Map<String, Float> GetRatio(Map<String, Float> map) {
-			var hashmap = new HashMap<String, Float>();
+		public MineralData GetRatio(MineralData map) {
+			MineralData mineralData = new MineralData(new HashMap<>());
 
 			Float totalCount = 0f;
 
-			for (Map.Entry<String, Float> entry : map.entrySet())
+			for (Map.Entry<String, Float> entry : map.mineralComposition().entrySet())
 				totalCount += entry.getValue();
 
-			for (Map.Entry<String, Float> entry : map.entrySet())
-				hashmap.put(entry.getKey(), entry.getValue() / totalCount);
+			for (Map.Entry<String, Float> entry : map.mineralComposition().entrySet())
+				mineralData.mineralComposition().put(entry.getKey(), entry.getValue() / totalCount);
 
-			return hashmap;
+			return mineralData;
 		}
-
-		public Float GetSimilarity(Map<String, Float> gemCrux, Map<String, Float> ratio) {
-			AtomicReference<List<Float>> differences = new AtomicReference<>(new ArrayList<>());
-
-			for (Map.Entry<String, Float> entry : ratio.entrySet()) {
-				var key = entry.getKey();
-				var value = entry.getValue();
-				var gemCruxValue = gemCrux.get(key);
-				if (gemCruxValue == null)
-					continue;
-				var total = (Math.abs(value - gemCruxValue) / ((value + gemCruxValue) / 2));
-				differences.get().add(total);
-			}
-
-			var total = new AtomicDouble();
-			for (Float difference : differences.get())
-				total.addAndGet(difference);
-
-			return (total.floatValue() / differences.get().size());
-		}
-
 	}
 
-	static public class StoredMineralData {
+	public float getTemperature(Level level)
+	{
+		return level.getBiome(this.getBlockPos()).value().getBaseTemperature();
+	}
 
-		Map<String, Float> data;
+	public GemVariant getGemVariant()
+	{
+		if (this.getLevel() == null)
+			return null;
 
-		public StoredMineralData(Map<String, Float> data) {
-			this.data = data;
-		}
+		float temperature = getTemperature(this.getLevel());
+		int yLevel = this.getBlockPos().getY();
+		CruxData cruxData = new CruxData(this.geologicalData, temperature, yLevel);
 
-		public Map<String, Float> getData() {
-			return data;
-		}
+		Registry<GemVariant> gemVariantRegistry = this.getLevel().registryAccess().getOrThrow(VerneuilDataTypes.GEM_VARIANT).value();
+		var gemVariantEntryset = gemVariantRegistry.entrySet();
 
-		public void addData(Pair<String, Float> data) {
-			if (this.data.containsKey(data.getFirst())) {
-				var oldValue = this.data.get(data.getFirst());
-				this.data.replace(data.getFirst(), oldValue + data.getSecond());
+		double minDifference = Double.MAX_VALUE;
+		GemVariant closestVariant = null;
+
+		for (Map.Entry<ResourceKey<GemVariant>, GemVariant> entry : gemVariantEntryset) {
+			if (entry.getValue().crux().isPresent()) {
+				double difference = CruxData.getSimilarity(entry.getValue().crux().get(), cruxData);
+				if (difference <= minDifference) {
+					closestVariant = entry.getValue();
+				}
 			}
-			else
-				this.data.put(data.getFirst(), data.getSecond());
 		}
 
-		public void setData(StoredMineralData data) {
-			this.data = new HashMap<>(data.data);
-		}
+		return closestVariant;
+	}
 
-		public static final Codec<StoredMineralData> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.unboundedMap(Codec.STRING, Codec.FLOAT).fieldOf("stored_data").forGetter(StoredMineralData::getData)).apply(instance, StoredMineralData::new));
+	public void drainBlock(BlockPos pos, ServerLevel serverLevel)
+	{
+		Holder<Block> holder = serverLevel.getBlockState(pos).getBlockHolder();
+		BlockDrainData blockDrainData = holder.getData(BlockDrainDataMap.BLOCK_DRAIN_DATA);
 
+		if (blockDrainData == null)
+			return;
+
+		MineralData.addData(this.geologicalData, blockDrainData.mineralData());
+
+		if (blockDrainData.drainTo().isPresent())
+			serverLevel.setBlockAndUpdate(pos, blockDrainData.drainTo().get().defaultBlockState());
 	}
 
 	@Override
 	public void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		input.read("geo_data", StoredMineralData.CODEC).ifPresent(this.geologicalData::setData);
+		input.read("geo_data", MineralData.CODEC).ifPresent(MineralData::new);
 	}
 
 	@Override
 	public void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.store("geo_data", StoredMineralData.CODEC, this.geologicalData);
+		output.store("geo_data", MineralData.CODEC, this.geologicalData);
 	}
 }

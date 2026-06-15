@@ -4,7 +4,7 @@ import com.honeyedlemons.verneuli.blocks.VerneuilBlocks;
 import com.honeyedlemons.verneuli.config.VerneuilConfigServer;
 import com.honeyedlemons.verneuli.data.dataAttachments.VerneuilDataAttachments;
 import com.honeyedlemons.verneuli.data.dataComponents.VerneuilDataComponents;
-import com.honeyedlemons.verneuli.data.dataMaps.BlockMineralDataMap;
+import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
 import com.honeyedlemons.verneuli.data.dataMaps.EntityGemVariantsDataMap;
 import com.honeyedlemons.verneuli.entities.VerneuilEntities;
 import com.honeyedlemons.verneuli.items.VerneuilItems;
@@ -33,15 +33,15 @@ public class Verneuil {
 		NeoForge.EVENT_BUS.register(this);
 
 		VerneuilBlocks.BLOCK_ENTITY_TYPES.register(modEventBus);
-		VerneuilBlocks.BLOCKS.register(modEventBus);
 		VerneuilDataComponents.DATA_COMPONENTS.register(modEventBus);
 		VerneuilDataAttachments.ATTACHMENT_TYPES.register(modEventBus);
 		VerneuilEntities.ENTITY_TYPES.register(modEventBus);
 		VerneuilItems.ITEMS.register(modEventBus);
+		VerneuilBlocks.BLOCKS.register(modEventBus);
 
 		CREATIVE_MODE_TABS.register(modEventBus);
 
-		modEventBus.register(BlockMineralDataMap.class);
+		modEventBus.register(BlockDrainDataMap.class);
 		modEventBus.register(EntityGemVariantsDataMap.class);
 
 		NeoForge.EVENT_BUS.register(this);

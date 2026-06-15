@@ -5,11 +5,5 @@
     "count": 1
   },
   "type": "carnelian",
-  "translation": "verneuil.gemvariant.carnelian",
-  "crux": {
-    "mineral_data": {
-      "Silica": 1,
-      "Carbon": 1
-    }
-  }
+  "translation": "verneuil.gemvariant.carnelian"
 }

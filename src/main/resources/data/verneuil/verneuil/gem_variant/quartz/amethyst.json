@@ -7,9 +7,13 @@
   "type": "amethyst",
   "translation": "verneuil.gemvariant.amethyst",
   "crux": {
-    "mineral_data": {
-      "Silica": 1,
-      "Carbon": 1
-    }
+    "ideal_ratio": {
+      "mineral_composition": {
+        "Silica": 0.8,
+        "Iron": 0.2
+      }
+    },
+    "ideal_temperature" : 0.5,
+    "ideal_height" : 16
   }
 }
