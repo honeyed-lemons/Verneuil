@@ -337,7 +337,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 		DEFAULT,BOW,MACE,SPEAR
 	}
 
-	private static WeaponType getHeldWeaponType(LivingEntity livingEntity){
+	static WeaponType getHeldWeaponType(LivingEntity livingEntity){
 
 		var heldItem = livingEntity.getActiveItem();
 

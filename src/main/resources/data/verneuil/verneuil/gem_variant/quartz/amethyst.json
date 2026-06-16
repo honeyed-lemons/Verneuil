@@ -9,8 +9,8 @@
   "crux": {
     "ideal_ratio": {
       "mineral_composition": {
-        "Silica": 0.8,
-        "Iron": 0.2
+        "silica": 0.8,
+        "iron": 0.2
       }
     },
     "ideal_temperature" : 0.5,
