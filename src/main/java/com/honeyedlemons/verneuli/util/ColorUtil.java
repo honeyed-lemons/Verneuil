@@ -2,7 +2,7 @@ package com.honeyedlemons.verneuli.util;
 
 import com.honeyedlemons.verneuli.Verneuil;
 import com.honeyedlemons.verneuli.entities.gems.AbstractGem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class ColorUtil {
 
-	public static int generateColorFromPalette(ResourceLocation location, RandomSource random, ServerLevelAccessor server) {
+	public static int generateColorFromPalette(Identifier location, RandomSource random, ServerLevelAccessor server) {
 		var color = Color.white.getRGB();
 		var resourceManager = Objects.requireNonNull(server.getServer()).getResourceManager();
 		var paletteFile = resourceManager.getResource(location);
@@ -43,10 +43,10 @@ public class ColorUtil {
 		return colors.get(randomIndex);
 	}
 
-	public static ResourceLocation paletteLocation(AbstractGem gem, String type) {
+	public static Identifier paletteLocation(AbstractGem gem, String type) {
 		var gemType = gem.getType().toShortString();
 		var gemVariantType = gem.getGemVariant().type();
-		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "palettes/" + gemType + "/" + gemVariantType + "/" + type + ".png");
+		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "palettes/" + gemType + "/" + gemVariantType + "/" + type + ".png");
 	}
 
 	public static Color colorFromInt(int rgb) {

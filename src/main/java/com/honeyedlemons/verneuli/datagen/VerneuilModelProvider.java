@@ -12,7 +12,7 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -41,8 +41,8 @@ public class VerneuilModelProvider extends ModelProvider {
 		return new ModelTemplate(Optional.of(getGemModelLocation(item)), Optional.empty(), TextureSlot.LAYER0);
 	}
 
-	public static ResourceLocation getGemModelLocation(GemItem item) {
-		ResourceLocation resourcelocation = BuiltInRegistries.ITEM.getKey(item);
+	public static Identifier getGemModelLocation(GemItem item) {
+		Identifier resourcelocation = BuiltInRegistries.ITEM.getKey(item);
 		return resourcelocation.withPrefix("item/gems/" + item.entityType.toShortString() + "/");
 	}
 

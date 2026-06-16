@@ -5,7 +5,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 @EventBusSubscriber(modid = Verneuil.MODID)
 public class VerneuilLayerDefinitions {
 	// Our ModelLayerLocation.
-	public static final ModelLayerLocation BASE_GEM_LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "gem"), "main");
+	public static final ModelLayerLocation BASE_GEM_LAYER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Verneuil.MODID, "gem"), "main");
 	public static final CubeDeformation OUTER_ARMOR_DEFORMATION = new CubeDeformation(1.05F);
 	public static final CubeDeformation INNER_ARMOR_DEFORMATION = new CubeDeformation(1.2F);
 	public static final ArmorModelSet<ModelLayerLocation> QUARTZ_ARMOR = registerArmorSet("armor");
@@ -30,7 +30,7 @@ public class VerneuilLayerDefinitions {
 	}
 
 	public static ArmorModelSet<ModelLayerLocation> registerArmorSet(String path) {
-		var resourceLocation = ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, path);
+		var resourceLocation = Identifier.fromNamespaceAndPath(Verneuil.MODID, path);
 		return new ArmorModelSet<>(new ModelLayerLocation(resourceLocation, "helmet"), new ModelLayerLocation(resourceLocation, "chestplate"), new ModelLayerLocation(resourceLocation, "leggings"), new ModelLayerLocation(resourceLocation, "boots"));
 	}
 }

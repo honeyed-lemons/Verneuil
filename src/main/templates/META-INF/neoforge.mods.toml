@@ -36,10 +36,10 @@ displayName = "${mod_name}" #mandatory
 #credits="" #optional
 
 # A text field displayed in the mod UI
-authors = "${mod_authors}" #optional
+authors = "gay" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
-description = '''${mod_description}'''
+description = '''gay'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 #[[mixins]]
@@ -84,7 +84,7 @@ side = "BOTH"
 [[dependencies.${ mod_id }]]
 modId = "smartbrainlib"
 mandatory = true
-versionRange = "[1.16,)"
+versionRange = "[1.17-alpha-1,)"
 ordering = "NONE"
 side = "SERVER"
 

@@ -10,8 +10,8 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
@@ -32,9 +32,9 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(GemRenderState renderState) {
+	public Identifier getTextureLocation(GemRenderState renderState) {
 		var type = renderState.entityType.toShortString();
-		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "/textures/entity/gems/" + type + "/" + type + ".png");
+		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "/textures/entity/gems/" + type + "/" + type + ".png");
 	}
 
 	@Override

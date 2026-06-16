@@ -9,7 +9,7 @@ import com.honeyedlemons.verneuli.entities.items.GemItemEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionResult;
@@ -32,13 +32,13 @@ import java.util.Objects;
 
 public class GemItem extends Item implements IItemExtension {
 
-	private final ResourceLocation gemVariantLocation;
+	private final Identifier gemVariantLocation;
 	public final EntityType<?> entityType;
 
-	public GemItem(Properties properties, EntityType<?> entityType, ResourceLocation gemVariantResourceLocation) {
+	public GemItem(Properties properties, EntityType<?> entityType, Identifier gemVariantIdentifier) {
 		super(properties);
 		this.entityType = entityType;
-		this.gemVariantLocation = gemVariantResourceLocation;
+		this.gemVariantLocation = gemVariantIdentifier;
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class GemItem extends Item implements IItemExtension {
 				return;
 
 			if (valueInput == null && player != null) {
-				player.displayClientMessage(Component.translatable("verneuil.gemitem.warning"), false);
+				player.sendOverlayMessage(Component.translatable("verneuil.gemitem.warning"));
 				return;
 			}
 			entity = spawnEntity(valueInput, level, spawnPos, spawnReason);
@@ -121,7 +121,7 @@ public class GemItem extends Item implements IItemExtension {
 		return entityType.spawn(serverLevel, pos, spawnReason);
 	}
 
-	private GemVariant getGemVariant(ServerLevel server, ResourceLocation resourceLocation) {
+	private GemVariant getGemVariant(ServerLevel server, Identifier resourceLocation) {
 		var gemVariant = server.registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT).get(resourceLocation);
 
 		return gemVariant.map(Holder.Reference::value).orElse(null);

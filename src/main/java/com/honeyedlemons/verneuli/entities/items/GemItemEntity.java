@@ -19,7 +19,7 @@ public class GemItemEntity extends ItemEntity {
 	}
 
 	public GemItemEntity(Level level, double posX, double posY, double posZ, ItemStack itemStack) {
-		this(level, posX, posY, posZ, itemStack, level.random.nextDouble() * 0.2 - 0.1, 0.2, level.random.nextDouble() * 0.2 - 0.1);
+		this(level, posX, posY, posZ, itemStack, level.getRandom().nextDouble() * 0.2 - 0.1, 0.2, level.getRandom().nextDouble() * 0.2 - 0.1);
 	}
 
 	public GemItemEntity(Level level, double posX, double posY, double posZ, ItemStack itemStack, double deltaX, double deltaY, double deltaZ) {

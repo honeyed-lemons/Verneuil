@@ -5,12 +5,13 @@ import com.honeyedlemons.verneuli.client.model.AbstractGemModel;
 import com.honeyedlemons.verneuli.client.renderer.entity.renderstates.GemRenderState;
 import com.honeyedlemons.verneuli.data.dataTypes.LayerData;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 
 import java.awt.*;
 import java.util.Map;
@@ -37,18 +38,19 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel> {
 			Boolean isVariant = layerData.isVariant();
 			String variantName = isVariant ? renderState.gemAppearanceData.getLayerData().get(name) : null;
 
-			ResourceLocation resourceLocation = variantName != null ? getVariantLocation(renderState, layerData, variantName) : getResourceLocation(renderState, name);
-			RenderType rendertype = RenderType.entityTranslucent(resourceLocation);
+			Identifier resourceLocation = variantName != null ? getVariantLocation(renderState, layerData, variantName) : getIdentifier(renderState, name);
+			RenderType rendertype = RenderTypes.entityTranslucent(resourceLocation);
 			int index = layers.indexOf(layerData);
 			nodeCollector.order(index).submitModel(this.getParentModel(), renderState, poseStack, rendertype, packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0.0F), renderState.gemAppearanceData.getColorData().getOrDefault(palette, Color.WHITE.getRGB()), null, renderState.outlineColor, null);
+
 		});
 	}
 
-	public ResourceLocation getResourceLocation(GemRenderState renderState, String name) {
-		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
+	public Identifier getIdentifier(GemRenderState renderState, String name) {
+		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
 	}
 
-	public ResourceLocation getVariantLocation(GemRenderState renderState, LayerData layerData, String variant) {
+	public Identifier getVariantLocation(GemRenderState renderState, LayerData layerData, String variant) {
 		var layers = renderState.gemAppearanceData.getLayerData();
 		var prefix = "";
 		if (layerData.layersToPrefix().isPresent()) {
@@ -59,6 +61,6 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel> {
 				}
 			}
 		}
-		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
+		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
 	}
 }

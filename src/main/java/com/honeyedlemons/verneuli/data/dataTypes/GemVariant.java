@@ -6,22 +6,22 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.*;
 
-public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<ResourceLocation> entity,
-						 ItemStack gemItem, String type, String translation, Optional<Holder<SoundEvent>> talkSound,
+public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<Identifier> entity,
+						 ItemStackTemplate gemItem, String type, String translation, Optional<Holder<SoundEvent>> talkSound,
 						 Optional<List<PaletteData>> palettes, Optional<Map<String, List<String>>> variants,
 						 Optional<List<LayerData>> layers, Optional<CruxData> crux) {
 
 	public static final Codec<GemVariant> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			DefaultGemVariant.CODEC.optionalFieldOf("parent").forGetter(GemVariant::parent),
-			ResourceLocation.CODEC.optionalFieldOf("entity").forGetter(GemVariant::entity),
-			ItemStack.STRICT_CODEC.fieldOf("gem_item").forGetter(GemVariant::gemItem),
+			Identifier.CODEC.optionalFieldOf("entity").forGetter(GemVariant::entity),
+			ItemStackTemplate.CODEC.fieldOf("gem_item").forGetter(GemVariant::gemItem),
 			Codec.STRING.fieldOf("type").forGetter(GemVariant::type),
 			Codec.STRING.fieldOf("translation").forGetter(GemVariant::translation),
 			SoundEvent.CODEC.optionalFieldOf("talk_sound").forGetter(GemVariant::talkSound),
@@ -41,7 +41,7 @@ public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<Re
 
 
 	@Override
-	public Optional<ResourceLocation> entity() {
+	public Optional<Identifier> entity() {
 		if (this.entity.isEmpty() && parent().isPresent()) {
 			return parent().get().value().entity();
 		}

@@ -5,7 +5,7 @@ import com.honeyedlemons.verneuli.data.dataMaps.valueModifiers.GemVariantsMerger
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.datamaps.AdvancedDataMapType;
@@ -16,13 +16,13 @@ import java.util.List;
 
 public class EntityGemVariantsDataMap {
 
-	public record GemVariants(List<ResourceLocation> gemVariants) {}
+	public record GemVariants(List<Identifier> gemVariants) {}
 
 	public static final Codec<GemVariants> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.list(ResourceLocation.CODEC).fieldOf("gem_variants").forGetter(GemVariants::gemVariants))
+			Codec.list(Identifier.CODEC).fieldOf("gem_variants").forGetter(GemVariants::gemVariants))
 			.apply(instance, GemVariants::new));
 	public static final AdvancedDataMapType<EntityType<?>, GemVariants, DataMapValueRemover.Default<GemVariants, EntityType<?>>> GEM_VARIANTS = AdvancedDataMapType
-			.builder(ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "gem_variants"), Registries.ENTITY_TYPE, CODEC)
+			.builder(Identifier.fromNamespaceAndPath(Verneuil.MODID, "gem_variants"), Registries.ENTITY_TYPE, CODEC)
 			.remover(DataMapValueRemover.Default.codec())
 			.merger(new GemVariantsMerger())
 			.build();

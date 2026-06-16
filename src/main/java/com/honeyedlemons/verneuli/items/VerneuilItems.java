@@ -1,7 +1,7 @@
 package com.honeyedlemons.verneuli.items;
 
 import com.honeyedlemons.verneuli.entities.VerneuilEntities;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -42,7 +42,7 @@ public class VerneuilItems {
 			item -> gemItem(item, VerneuilEntities.QUARTZ.get(), "zebra_jasper"));
 
 	public static GemItem gemItem(Item.Properties properties, EntityType<?> entityType, String variant) {
-		var resourceLocation = ResourceLocation.fromNamespaceAndPath(MODID, entityType.toShortString() + "/" + variant);
+		var resourceLocation = Identifier.fromNamespaceAndPath(MODID, entityType.toShortString() + "/" + variant);
 		return new GemItem(properties.stacksTo(1).fireResistant(), entityType, resourceLocation);
 	}
 

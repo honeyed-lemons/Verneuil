@@ -9,8 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -66,7 +66,7 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 		this.setOwner(player);
 
 		if (message != null)
-			player.displayClientMessage(message, false);
+			player.sendOverlayMessage(message);
 	}
 
 	public boolean isTame() {
@@ -101,7 +101,7 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 		super.die(cause);
 
 		if (this.dead)
-			if (this.level() instanceof ServerLevel serverlevel && serverlevel.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer serverplayer && cause.getDirectEntity() != serverplayer) {
+			if (this.level() instanceof ServerLevel serverlevel && serverlevel.getGameRules().get(GameRules.SHOW_DEATH_MESSAGES) && this.getOwner() instanceof ServerPlayer serverplayer && cause.getDirectEntity() != serverplayer) {
 				serverplayer.sendSystemMessage(deathMessage);
 			}
 	}

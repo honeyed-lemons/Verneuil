@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -24,8 +25,9 @@ public class GemSavedData extends SavedData {
 
 
 	public static final Codec<GemSavedData> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.unboundedMap(UUIDUtil.STRING_CODEC, CompoundTag.CODEC).fieldOf("gem_data").forGetter(data -> data.gemData)).apply(instance, GemSavedData::new));
+	private static final Identifier GEM_DATA_FILE_ID = Identifier.withDefaultNamespace("gem_data");
 
-	public static final SavedDataType<GemSavedData> ID = new SavedDataType<>("gem_data", GemSavedData::new, CODEC);
+	public static final SavedDataType<GemSavedData> ID = new SavedDataType<>(GEM_DATA_FILE_ID, GemSavedData::new, CODEC);
 
 	private GemSavedData() {
 		this(new HashMap<>());

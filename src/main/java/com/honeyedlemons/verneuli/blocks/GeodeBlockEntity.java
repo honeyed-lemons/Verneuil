@@ -101,7 +101,7 @@ public class GeodeBlockEntity extends BlockEntity {
 
 	public void drainBlock(BlockPos pos, ServerLevel serverLevel)
 	{
-		Holder<Block> holder = serverLevel.getBlockState(pos).getBlockHolder();
+		Holder<Block> holder = serverLevel.getBlockState(pos).typeHolder();
 		BlockDrainData blockDrainData = holder.getData(BlockDrainDataMap.BLOCK_DRAIN_DATA);
 
 		if (blockDrainData == null)
