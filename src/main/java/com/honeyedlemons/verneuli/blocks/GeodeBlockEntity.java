@@ -2,6 +2,7 @@ package com.honeyedlemons.verneuli.blocks;
 
 import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
 import com.honeyedlemons.verneuli.data.dataTypes.*;
+import com.honeyedlemons.verneuli.util.CruxUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -71,17 +72,15 @@ public class GeodeBlockEntity extends BlockEntity {
 		}
 	}
 
-	public float getTemperature(Level level)
-	{
-		return level.getBiome(this.getBlockPos()).value().getBaseTemperature();
-	}
+
 
 	public Pair<GemVariant, Double> getGemVariant()
 	{
 		if (this.getLevel() == null)
 			return null;
 
-		float temperature = getTemperature(this.getLevel());
+		float temperature = CruxUtil.getTemperature(this.getLevel(), this.getBlockPos());
+
 		int yLevel = this.getBlockPos().getY();
 		CruxData cruxData = new CruxData(this.geologicalData, temperature, yLevel);
 
@@ -118,8 +117,10 @@ public class GeodeBlockEntity extends BlockEntity {
 
 		MineralData.addData(this.geologicalData, blockDrainData.mineralData());
 
-		if (blockDrainData.drainTo().isPresent())
-			serverLevel.setBlockAndUpdate(pos, blockDrainData.drainTo().get().defaultBlockState());
+		if (blockDrainData.drainTo().isPresent()) {
+			var state = CruxUtil.getDrainedBlockstate(serverLevel.getLevel(),pos,blockDrainData.drainTo().get().defaultBlockState());
+			serverLevel.setBlockAndUpdate(pos, state);
+		}
 	}
 
 	@Override

@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "drained_color=purple,index=0": {
+      "model": "verneuil:block/drained_block_0_purple"
+    },
+    "drained_color=purple,index=1": {
+      "model": "verneuil:block/drained_block_1_purple"
+    },
+    "drained_color=purple,index=2": {
+      "model": "verneuil:block/drained_block_2_purple"
+    },
+    "drained_color=black,index=0": {
+      "model": "verneuil:block/drained_block_0_black"
+    },
+    "drained_color=black,index=1": {
+      "model": "verneuil:block/drained_block_1_black"
+    },
+    "drained_color=black,index=2": {
+      "model": "verneuil:block/drained_block_2_black"
+    },
+    "drained_color=blue,index=0": {
+      "model": "verneuil:block/drained_block_0_blue"
+    },
+    "drained_color=blue,index=1": {
+      "model": "verneuil:block/drained_block_1_blue"
+    },
+    "drained_color=blue,index=2": {
+      "model": "verneuil:block/drained_block_2_blue"
+    },
+    "drained_color=red,index=0": {
+      "model": "verneuil:block/drained_block_0_red"
+    },
+    "drained_color=red,index=1": {
+      "model": "verneuil:block/drained_block_1_red"
+    },
+    "drained_color=red,index=2": {
+      "model": "verneuil:block/drained_block_2_red"
+    }
+  }
+}
