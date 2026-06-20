@@ -5,5 +5,15 @@
     "count": 1
   },
   "type": "carnelian",
-  "translation": "verneuil.gemvariant.carnelian"
+  "translation": "verneuil.gemvariant.carnelian",
+  "crux": {
+    "ideal_ratio": {
+      "mineral_composition": {
+        "silica": 0.8,
+        "sulfur": 0.2
+      }
+    },
+    "ideal_temperature" : 2,
+    "ideal_height" : 16
+  }
 }

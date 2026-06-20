@@ -32,6 +32,11 @@
   "item.verneuil.red_striped_jasper_gem" : "Red Striped Jasper Gem",
   "item.verneuil.ocean_jasper_gem" : "Ocean Jasper Gem",
   "item.verneuil.zebra_jasper_gem" : "Zebra Jasper Gem",
-  "item.verneuil.biggs_jasper_gem" : "Biggs Jasper Gem"
+  "item.verneuil.biggs_jasper_gem" : "Biggs Jasper Gem",
 
+  "block.verneuil.drained_stone" : "Drained Stone",
+  "block.verneuil.drained_soil" : "Drained Soil",
+  "block.verneuil.drained_dust" : "Drained Dust",
+
+  "block.verneuil.geode" : "Geode"
 }

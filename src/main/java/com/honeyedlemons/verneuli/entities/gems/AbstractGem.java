@@ -524,12 +524,16 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 	public void setGemVariant(GemVariant variant, @Nullable Boolean generatePalette, @Nullable Boolean generateVariants) {
 		final var registry = registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT);
 		Holder<GemVariant> holder = registry.wrapAsHolder(variant);
-		this.setData(VerneuilDataAttachments.GEM_VARIANT, holder);
 		ServerLevel serverLevel = (ServerLevel) this.level();
+
+		this.setData(VerneuilDataAttachments.GEM_VARIANT, holder);
+
 		if (Boolean.TRUE.equals(generatePalette))
 			generatePaletteColors(serverLevel);
+
 		if (Boolean.TRUE.equals(generateVariants))
 			generateLayerVariants(serverLevel);
+
 		this.adaptUniformColors();
 	}
 

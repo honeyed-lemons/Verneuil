@@ -74,8 +74,11 @@ public class GemItem extends Item implements IItemExtension {
 		ServerLevel serverLevel = Objects.requireNonNull(level.getServer()).overworld();
 
 		if (gemData == null) { // Gem UUID is not stored in gem item, spawn random gem of gem variant
+
 			spawnReason = EntitySpawnReason.SPAWN_ITEM_USE;
+
 			entity = spawnEntity(level, spawnPos, spawnReason);
+
 			if (entity instanceof AbstractGem gem) {
 				GemVariant gemVariant = getGemVariant(serverLevel, gemVariantLocation);
 				gem.setGemVariant(gemVariant, true, true);
@@ -86,7 +89,7 @@ public class GemItem extends Item implements IItemExtension {
 			var gemSavedData = serverLevel.getDataStorage().computeIfAbsent(GemSavedData.ID);
 			ValueInput valueInput = gemSavedData.getGem(gemData.uuid(), serverLevel.registryAccess());
 
-			// if entity already exists in the world, dont let it spawn and dont give any errors
+			// if entity already exists in the world, don;t let it spawn and don;t give any errors
 			if (level.getEntityInAnyDimension(gemData.uuid()) != null)
 				return;
 

@@ -24,20 +24,23 @@ public class VerneuilBlocks {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
 
 	public static final DeferredBlock<DrainedBlock> DRAINED_STONE = registerBlock("drained_stone",true,
-			properties -> new DrainedBlock(BlockBehaviour.Properties
+			_ -> new DrainedBlock(BlockBehaviour.Properties
 					.ofFullCopy(Blocks.STONE)
 					.setId(getRegistryKey("drained_stone"))));
 
 	public static final DeferredBlock<DrainedBlock> DRAINED_SOIL = registerBlock("drained_soil",true,
-			properties -> new DrainedBlock(BlockBehaviour.Properties
+			_ -> new DrainedBlock(BlockBehaviour.Properties
 					.ofFullCopy(Blocks.DIRT)
 					.setId(getRegistryKey("drained_soil"))));
 	public static final DeferredBlock<Block> DRAINED_DUST = registerBlock("drained_dust",true,
-			properties -> new FallingDrainedBlock(BlockBehaviour.Properties
+			_ -> new FallingDrainedBlock(BlockBehaviour.Properties
 					.ofFullCopy(Blocks.SAND)
 					.setId(getRegistryKey("drained_dust"))));
 
-	public static final DeferredBlock<GeodeBlockEntity.GeodeBlock> GEODE = registerBlock("geode",true, GeodeBlockEntity.GeodeBlock::new);
+	public static final DeferredBlock<GeodeBlockEntity.GeodeBlock> GEODE = registerBlock("geode",true,
+			_ -> new GeodeBlockEntity.GeodeBlock(BlockBehaviour.Properties.of()
+					.noOcclusion()
+					.setId(getRegistryKey("geode"))));
 
 	public static ResourceKey<Block> getRegistryKey(String name)
 	{
