@@ -36,7 +36,7 @@ displayName = "${mod_name}" #mandatory
 #credits="" #optional
 
 # A text field displayed in the mod UI
-authors = "gay" #optional
+authors = "honeyed_lemons, segapop" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description = '''gay'''
@@ -83,11 +83,17 @@ side = "BOTH"
 
 [[dependencies.${ mod_id }]]
 modId = "smartbrainlib"
-mandatory = true
-versionRange = "[1.17-alpha-1,)"
+type = "required"
+versionRange = "sbl_version_range"
 ordering = "NONE"
 side = "SERVER"
 
+[[dependencies.${ mod_id }]]
+modId = "open-claims-and-parties"
+type = "optional"
+versionRange = "opac_version_range"
+ordering = "NONE"
+side = "SERVER"
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.

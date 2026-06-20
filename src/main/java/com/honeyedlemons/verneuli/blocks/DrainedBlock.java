@@ -1,6 +1,6 @@
 package com.honeyedlemons.verneuli.blocks;
 
-import com.honeyedlemons.verneuli.util.CruxUtil;
+import com.honeyedlemons.verneuli.util.DrainUtil;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +24,7 @@ public class DrainedBlock extends Block {
 	}
 	@Override
 	public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-		return CruxUtil.getDrainedBlockstate(context.getLevel(),context.getClickedPos(),this.defaultBlockState());
+		return DrainUtil.getDrainedBlockstate(context.getLevel(),context.getClickedPos(),this.defaultBlockState());
 	}
 }
 

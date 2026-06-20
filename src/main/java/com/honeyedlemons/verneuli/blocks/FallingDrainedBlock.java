@@ -1,6 +1,6 @@
 package com.honeyedlemons.verneuli.blocks;
 
-import com.honeyedlemons.verneuli.util.CruxUtil;
+import com.honeyedlemons.verneuli.util.DrainUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,7 +26,7 @@ public class FallingDrainedBlock extends FallingBlock {
 	}
 	@Override
 	public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-		return CruxUtil.getDrainedBlockstate(context.getLevel(),context.getClickedPos(),this.defaultBlockState());
+		return DrainUtil.getDrainedBlockstate(context.getLevel(),context.getClickedPos(),this.defaultBlockState());
 	}
 
 	public static final MapCodec<FallingDrainedBlock> CODEC = simpleCodec(FallingDrainedBlock::new);

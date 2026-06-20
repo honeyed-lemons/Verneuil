@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import static com.honeyedlemons.verneuli.blocks.DrainedBlock.DRAINED_COLOR;
 import static com.honeyedlemons.verneuli.blocks.DrainedBlock.INDEX;
 
-public class CruxUtil {
+public class DrainUtil {
 
 	public static float getTemperature(Level level, BlockPos pos)
 	{
@@ -37,5 +37,10 @@ public class CruxUtil {
 		state = state.setValue(INDEX,Math.abs(pos.getY() % 3));
 
 		return state;
+	}
+
+	public static BlockPos findClosestAir(Level level, BlockPos pos)
+	{
+		return pos;
 	}
 }

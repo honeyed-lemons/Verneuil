@@ -1,10 +1,11 @@
 package com.honeyedlemons.verneuli.blocks;
 
 import com.google.common.collect.Iterables;
+import com.honeyedlemons.verneuli.compat.OpenPartiesAndClaimsCompat;
 import com.honeyedlemons.verneuli.config.VerneuilConfigServer;
 import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
 import com.honeyedlemons.verneuli.data.dataTypes.*;
-import com.honeyedlemons.verneuli.util.CruxUtil;
+import com.honeyedlemons.verneuli.util.DrainUtil;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -14,7 +15,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -28,6 +32,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.fml.ModList;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +45,7 @@ public class GeodeBlockEntity extends BlockEntity {
 	}
 
 	private final MineralData geologicalData = new MineralData(new HashMap<>());
+	private @Nullable EntityReference<LivingEntity> ownedBy;
 
 	public static class GeodeBlock extends Block implements EntityBlock {
 
@@ -57,6 +64,13 @@ public class GeodeBlockEntity extends BlockEntity {
 		@Override
 		public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 			return new GeodeBlockEntity(pos, state);
+		}
+
+		public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
+			super.setPlacedBy(level, pos, state, by, itemStack);
+
+			if (level.getBlockEntity(pos) instanceof GeodeBlockEntity geode)
+				geode.ownedBy = EntityReference.of(by);
 		}
 
 		@Override
@@ -136,7 +150,7 @@ public class GeodeBlockEntity extends BlockEntity {
 		if (this.getLevel() == null)
 			return null;
 
-		float temperature = CruxUtil.getTemperature(this.getLevel(), this.getBlockPos());
+		float temperature = DrainUtil.getTemperature(this.getLevel(), this.getBlockPos());
 
 		int yLevel = this.getBlockPos().getY();
 		CruxData cruxData = new CruxData(this.geologicalData, temperature, yLevel);
@@ -169,6 +183,13 @@ public class GeodeBlockEntity extends BlockEntity {
 
 	public void drainBlock(BlockPos pos, ServerLevel serverLevel)
 	{
+		if (!serverLevel.isAreaLoaded(pos, 1))
+			return;
+
+		if (ModList.get().isLoaded("openpartiesandclaims")) {
+			if (this.getLevel() != null && OpenPartiesAndClaimsCompat.canBreakBlock(serverLevel.getLevel(), (EntityReference.getLivingEntity(this.ownedBy, this.getLevel())),pos))
+				return;
+		}
 		Holder<Block> holder = serverLevel.getBlockState(pos).typeHolder();
 		BlockDrainData blockDrainData = holder.getData(BlockDrainDataMap.BLOCK_DRAIN_DATA);
 
@@ -178,7 +199,7 @@ public class GeodeBlockEntity extends BlockEntity {
 		MineralData.addData(this.geologicalData, blockDrainData.mineralData());
 
 		if (blockDrainData.drainTo().isPresent()) {
-			var state = CruxUtil.getDrainedBlockstate(serverLevel.getLevel(),pos,blockDrainData.drainTo().get().defaultBlockState());
+			var state = DrainUtil.getDrainedBlockstate(serverLevel.getLevel(),pos,blockDrainData.drainTo().get().defaultBlockState());
 			serverLevel.setBlockAndUpdate(pos, state);
 		}
 	}
@@ -187,11 +208,13 @@ public class GeodeBlockEntity extends BlockEntity {
 	public void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		input.read("geo_data", MineralData.CODEC).ifPresent(MineralData::new);
+		this.ownedBy = EntityReference.read(input, "owned_by");
 	}
 
 	@Override
 	public void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		output.store("geo_data", MineralData.CODEC, this.geologicalData);
+		EntityReference.store(this.ownedBy, output, "owned_by");
 	}
 }

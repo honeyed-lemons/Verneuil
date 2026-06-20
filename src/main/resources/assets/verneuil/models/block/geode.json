@@ -3,7 +3,6 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "verneuil:block/geode_swirl",
 		"2": "verneuil:block/geode_0",
 		"particle": "verneuil:block/geode_0"
 	},
@@ -21,34 +20,38 @@
 				"up": {"uv": [8, 4, 4, 0], "texture": "#2"},
 				"down": {"uv": [12, 0, 8, 4], "texture": "#2"}
 			}
-		},
-		{
-			"name": "Swirl",
-			"from": [0.95, 0.95, 0.95],
-			"to": [15.05, 15.05, 15.05],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"faces": {
-				"north": {"uv": [4, 12, 8, 16], "texture": "#1"},
-				"east": {"uv": [0, 12, 4, 16], "texture": "#1"},
-				"south": {"uv": [12, 12, 16, 16], "texture": "#1"},
-				"west": {"uv": [8, 12, 12, 16], "texture": "#1"},
-				"up": {"uv": [8, 12, 4, 8], "texture": "#1"},
-				"down": {"uv": [12, 8, 8, 12], "texture": "#1"}
-			}
-		},
-		{
-			"name": "Core",
-			"from": [4, 4, 4],
-			"to": [12, 12, 12],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"faces": {
-				"north": {"uv": [2, 2, 4, 4], "texture": "#2"},
-				"east": {"uv": [0, 2, 2, 4], "texture": "#2"},
-				"south": {"uv": [14, 2, 16, 4], "texture": "#2"},
-				"west": {"uv": [12, 2, 14, 4], "texture": "#2"},
-				"up": {"uv": [4, 2, 2, 0], "texture": "#2"},
-				"down": {"uv": [14, 0, 12, 2], "texture": "#2"}
-			}
 		}
-	]
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -135, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }
