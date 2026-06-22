@@ -1,0 +1,72 @@
+{
+  "variants": {
+    "drained_color=purple": [
+      {
+        "model": "verneuil:block/drained_soil"
+      },
+      {
+        "model": "verneuil:block/drained_soil",
+        "y": 90
+      },
+      {
+        "model": "verneuil:block/drained_soil",
+        "y": 180
+      },
+      {
+        "model": "verneuil:block/drained_soil",
+        "y": 270
+      }
+    ],
+    "drained_color=red": [
+      {
+        "model": "verneuil:block/drained_soil_red"
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 90
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 180
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 270
+      }
+    ],
+    "drained_color=blue": [
+      {
+        "model": "verneuil:block/drained_soil_blue"
+      },
+      {
+        "model": "verneuil:block/drained_soil_blue",
+        "y": 90
+      },
+      {
+        "model": "verneuil:block/drained_soil_blue",
+        "y": 180
+      },
+      {
+        "model": "verneuil:block/drained_soil_blue",
+        "y": 270
+      }
+    ],
+    "drained_color=black": [
+      {
+        "model": "verneuil:block/drained_soil_black"
+      },
+      {
+        "model": "verneuil:block/drained_soil_black",
+        "y": 90
+      },
+      {
+        "model": "verneuil:block/drained_soil_black",
+        "y": 180
+      },
+      {
+        "model": "verneuil:block/drained_soil_black",
+        "y": 270
+      }
+    ]
+  }
+}

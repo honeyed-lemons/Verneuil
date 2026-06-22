@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "end": "verneuil:block/drained_stone_top_purple",
+    "end": "verneuil:block/drained_stone_top_purple_dark",
     "side": "verneuil:block/drained_stone_side_2_purple"
   }
 }
