@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "index=0": {
+      "model": "verneuil:block/drained_stone_black"
+    },
+    "index=1": {
+      "model": "verneuil:block/drained_stone_black_1"
+    },
+    "index=2": {
+      "model": "verneuil:block/drained_stone_black_2"
+    }
+  }
+}

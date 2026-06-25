@@ -1,0 +1,104 @@
+{
+  "entity": "verneuil:quartz",
+  "palettes": [
+    {
+      "name": "skin",
+      "random": true
+    },
+    {
+      "name": "hair",
+      "random": true
+    },
+    {
+      "name": "uniform",
+      "random": false
+    },
+    {
+      "name": "insignia",
+      "random": false
+    },
+    {
+      "name": "gem",
+      "random": true
+    },
+    {
+      "name": "markings",
+      "random": true
+    }
+  ],
+  "variants": {
+    "hair": [
+      "bangs",
+      "messy",
+      "pearl",
+      "shy",
+      "swoop",
+      "widow"
+    ],
+    "gem": [
+      "back",
+      "belly",
+      "chest",
+      "eye_left",
+      "eye_right",
+      "forehead",
+      "hand_left",
+      "hand_right",
+      "head_back",
+      "head_top",
+      "knee_left",
+      "knee_right",
+      "nose",
+      "shoulder_left",
+      "shoulder_right"
+    ],
+    "uniform": [
+      "default"
+    ],
+    "insignia": [
+      "default"
+    ]
+  },
+  "layers": [
+    {
+      "name": "eyes",
+      "palette": "gem",
+      "is_variant": false
+    },
+    {
+      "name": "skin",
+      "palette": "skin",
+      "is_variant": false
+    },
+    {
+      "name": "markings",
+      "palette": "markings",
+      "is_variant": true
+    },
+    {
+      "name": "uniform",
+      "palette": "uniform",
+      "is_variant": true,
+      "layers_to_prefix": [
+        "belly",
+        "back"
+      ]
+    },
+    {
+      "name": "insignia",
+      "palette": "insignia",
+      "is_variant": true
+    },
+    {
+      "name": "hair",
+      "palette": "hair",
+      "is_variant": true
+    },
+    {
+      "name": "gem",
+      "palette": "gem",
+      "is_variant": true
+    }
+  ],
+  "talk_sound": "minecraft:block.note_block.bass"
+}

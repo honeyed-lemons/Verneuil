@@ -1,0 +1,9 @@
+{
+  "parent": "verneuil:quartz",
+  "gem_item": {
+    "id": "verneuil:citrine_gem",
+    "count": 1
+  },
+  "type": "citrine",
+  "translation": "verneuil.gem_variant.citrine"
+}

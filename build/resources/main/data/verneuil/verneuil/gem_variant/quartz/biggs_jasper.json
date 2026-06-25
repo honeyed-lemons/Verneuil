@@ -1,0 +1,21 @@
+{
+  "parent": "verneuil:quartz_two_marking",
+  "gem_item": {
+    "id": "verneuil:biggs_jasper_gem",
+    "count": 1
+  },
+  "type": "biggs_jasper",
+  "translation": "verneuil.gem_variant.biggs_jasper",
+  "variants": {
+    "hair": [],
+    "gem": [],
+    "markings": [
+      "biggs"
+    ],
+    "secondary_markings": [
+      "biggs"
+    ],
+    "uniform": [],
+    "insignia": []
+  }
+}

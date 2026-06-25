@@ -1,0 +1,9 @@
+{
+  "parent": "verneuil:quartz",
+  "gem_item": {
+    "id": "verneuil:rose_quartz_gem",
+    "count": 1
+  },
+  "type": "rose_quartz",
+  "translation": "verneuil.gem_variant.rose_quartz"
+}

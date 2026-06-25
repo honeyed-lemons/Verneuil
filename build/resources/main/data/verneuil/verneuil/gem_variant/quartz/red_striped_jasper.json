@@ -1,0 +1,19 @@
+{
+  "parent": "verneuil:quartz_one_marking",
+  "gem_item": {
+    "id": "verneuil:red_striped_jasper_gem",
+    "count": 1
+  },
+  "type": "red_striped_jasper",
+  "translation": "verneuil.gem_variant.red_striped_jasper",
+  "variants": {
+    "hair": [],
+    "gem": [],
+    "markings": [
+      "tiger",
+      "stripe"
+    ],
+    "uniform": [],
+    "insignia": []
+  }
+}
