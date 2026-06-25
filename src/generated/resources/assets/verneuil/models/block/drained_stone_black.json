@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "verneuil:block/drained_stone_black_top",
+    "side": "verneuil:block/drained_stone_black_0"
+  }
+}

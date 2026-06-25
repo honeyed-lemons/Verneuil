@@ -2,10 +2,10 @@ package com.honeyedlemons.verneuli.items;
 
 import com.honeyedlemons.verneuli.data.dataComponents.VerneuilDataComponents;
 import com.honeyedlemons.verneuli.data.dataTypes.GemVariant;
-import com.honeyedlemons.verneuli.data.dataTypes.VerneuilDataTypes;
 import com.honeyedlemons.verneuli.data.savedData.GemSavedData;
 import com.honeyedlemons.verneuli.entities.gems.AbstractGem;
 import com.honeyedlemons.verneuli.entities.items.GemItemEntity;
+import com.honeyedlemons.verneuli.util.RegistryUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -94,7 +94,7 @@ public class GemItem extends Item implements IItemExtension {
 				return;
 
 			if (valueInput == null && player != null) {
-				player.sendOverlayMessage(Component.translatable("verneuil.gemitem.warning"));
+				player.sendOverlayMessage(Component.translatable("verneuil.gemmessage.gem_item_warning"));
 				return;
 			}
 			entity = spawnEntity(valueInput, level, spawnPos, spawnReason);
@@ -125,7 +125,7 @@ public class GemItem extends Item implements IItemExtension {
 	}
 
 	private GemVariant getGemVariant(ServerLevel server, Identifier resourceLocation) {
-		var gemVariant = server.registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT).get(resourceLocation);
+		var gemVariant = RegistryUtil.getGemVariantRegistry(server.getLevel()).get(resourceLocation);
 
 		return gemVariant.map(Holder.Reference::value).orElse(null);
 	}

@@ -23,6 +23,6 @@ public record DefaultGemVariant(Optional<Identifier> entity, Optional<List<Palet
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, DefaultGemVariant> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.optional(Identifier.STREAM_CODEC), DefaultGemVariant::entity, ByteBufCodecs.optional(PaletteData.STREAM_CODEC.apply(ByteBufCodecs.list())), DefaultGemVariant::palettes, ByteBufCodecs.optional(ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()))), DefaultGemVariant::variants, ByteBufCodecs.optional(LayerData.STREAM_CODEC.apply(ByteBufCodecs.list())), DefaultGemVariant::layers, ByteBufCodecs.optional(SoundEvent.STREAM_CODEC), DefaultGemVariant::talkSound, DefaultGemVariant::new);
 
-	public static final Codec<Holder<DefaultGemVariant>> CODEC = RegistryFixedCodec.create(VerneuilDataTypes.DEFAULT_GEM_VARIANT);
+	public static final Codec<Holder<DefaultGemVariant>> CODEC = RegistryFixedCodec.create(VerneuilRegistries.DEFAULT_GEM_VARIANT);
 }
 

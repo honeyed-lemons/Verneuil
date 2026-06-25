@@ -9,16 +9,14 @@ import com.honeyedlemons.verneuli.data.dataComponents.VerneuilDataComponents;
 import com.honeyedlemons.verneuli.data.dataMaps.EntityGemVariantsDataMap;
 import com.honeyedlemons.verneuli.data.dataTypes.GemVariant;
 import com.honeyedlemons.verneuli.data.dataTypes.PaletteData;
-import com.honeyedlemons.verneuli.data.dataTypes.VerneuilDataTypes;
 import com.honeyedlemons.verneuli.data.savedData.GemSavedData;
 import com.honeyedlemons.verneuli.entities.TamableMob;
 import com.honeyedlemons.verneuli.util.ColorUtil;
+import com.honeyedlemons.verneuli.util.RegistryUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -123,45 +121,49 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 				this.talk();
 				return InteractionResult.SUCCESS;
 			}
-			if (this.isOwnedBy(player)) {
-				if (item instanceof DyeItem dyeItem) {
-					ApplyDye("insignia", itemstack, player);
+
+			if (!this.isOwnedBy(player)) {
+				return InteractionResult.PASS;
+			}
+
+			if (item instanceof DyeItem) {
+				ApplyDye("insignia", itemstack, player);
+				return InteractionResult.CONSUME;
+			}
+
+			if (item instanceof ShearsItem) {
+				cycleGemLayer("hair");
+				this.playSound(SoundEvents.SHEARS_SNIP, 1.0F, 1.0F);
+				return InteractionResult.SUCCESS;
+			}
+
+			if (itemEquippable(itemstack)) {
+				ItemStack equipped = equipItemIfPossible(serverLevel, itemstack.copy());
+				if (!equipped.isEmpty()) {
+					itemstack.consume(1, player);
 					return InteractionResult.CONSUME;
-				}
-				if (item instanceof ShearsItem) {
-					cycleGemLayer("hair");
-					this.playSound(SoundEvents.SHEARS_SNIP, 1.0F, 1.0F);
-					return InteractionResult.SUCCESS;
-				}
-				if (itemEquippable(itemstack)) {
-					ItemStack equipped = equipItemIfPossible(serverLevel, itemstack.copy());
-					if (!equipped.isEmpty()) {
-						itemstack.consume(1, player);
-						return InteractionResult.CONSUME;
-					}
 				}
 			}
 		}
 		else {
-			if (this.isOwnedBy(player)) {
-				if (item instanceof DyeItem dyeItem) {
-					ApplyDye("uniform", itemstack, player);
-					return InteractionResult.CONSUME;
-				}
-				this.cycleMovementType();
-				Component component;
-				byte movementType = getMovementType();
-				component = switch (movementType) {
-					case 0 -> Component.translatable("verneuil.gem.movementype.0", this.getDisplayName());
-					case 1 -> Component.translatable("verneuil.gem.movementype.1", this.getDisplayName());
-					case 2 -> Component.translatable("verneuil.gem.movementype.2", this.getDisplayName());
-					default -> null;
-				};
-				if (component != null)
-					player.sendOverlayMessage(component);
-				this.talk();
-				return InteractionResult.SUCCESS;
+			if (!this.isOwnedBy(player)) {
+				return InteractionResult.PASS;
 			}
+
+			if (item instanceof DyeItem dyeItem) {
+				ApplyDye("uniform", itemstack, player);
+				return InteractionResult.CONSUME;
+			}
+
+			this.cycleMovementType();
+
+			Component component = Component.translatable("verneuil.gem_message.movement_"+getMovementType(), this.getDisplayName());
+
+			player.sendOverlayMessage(component);
+
+			this.talk();
+
+			return InteractionResult.SUCCESS;
 		}
 
 		return InteractionResult.PASS;
@@ -178,7 +180,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 	}
 
 	public Component getTameMessage() {
-		return Component.translatable("verneuil.gem.tamemessage", this.getDisplayName());
+		return Component.translatable("verneuil.gem_message.tame", this.getDisplayName());
 	}
 	//endregion
 
@@ -255,7 +257,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 								.stopStrafingWhen(entity -> getHeldWeaponType(entity) != WeaponType.BOW || !entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET))
 								.startCondition(gem -> getHeldWeaponType(gem) == WeaponType.BOW))
 								.whenStopping(Mob::stopInPlace)
-								.whenStarting(gem -> this.setAggressive(true)),
+								.whenStarting(gem -> gem.setAggressive(true)),
 						new SetWalkTargetToAttackTarget<>(),
 				new LeapAtTarget<>(20)
 						.verticalJumpStrength((mob, gem) -> 0.7f)
@@ -466,7 +468,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 				return;
 			}
 
-			if (!validVariants.get().get(layerName).contains(layerValue)) {
+			if (validVariants.get().get(layerName) != null && !validVariants.get().get(layerName).contains(layerValue)) {
 				var randomizedLayer = randomizedLayerVariant(random, validVariants.get().get(layerName));
 				this.addGemLayer(layerName, randomizedLayer);
 			}
@@ -522,8 +524,8 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 	}
 
 	public void setGemVariant(GemVariant variant, @Nullable Boolean generatePalette, @Nullable Boolean generateVariants) {
-		final var registry = registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT);
-		Holder<GemVariant> holder = registry.wrapAsHolder(variant);
+		Holder<GemVariant> holder = RegistryUtil.getGemVariantRegistry(this.level()).wrapAsHolder(variant);
+
 		ServerLevel serverLevel = (ServerLevel) this.level();
 
 		this.setData(VerneuilDataAttachments.GEM_VARIANT, holder);
@@ -537,21 +539,10 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 		this.adaptUniformColors();
 	}
 
-	public Registry<GemVariant> getGemVariantRegistry() {
-
-		return this.registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT);
-	}
-
-	public GemVariant getGemVariant(Identifier resourceLocation) {
-
-		return getGemVariantRegistry().getValue(resourceLocation);
-	}
-
 	public void generateGemVariant(ServerLevelAccessor server, boolean randomize) {
 		var random = server.getRandom();
 
-		final var registry = registryAccess().lookupOrThrow(Registries.ENTITY_TYPE);
-		Holder<EntityType<?>> holder = registry.wrapAsHolder(this.getType());
+		Holder<EntityType<?>> holder = RegistryUtil.getEntityTypeRegistry(level()).wrapAsHolder(this.getType());
 
 		var gemVariantData = holder.getData(EntityGemVariantsDataMap.GEM_VARIANTS);
 		List<Identifier> gemVariantList;
@@ -562,7 +553,7 @@ public abstract class AbstractGem extends TamableMob implements SmartBrainOwner<
 			gemVariantList = gemVariantData.gemVariants();
 
 		var picked = gemVariantList.get(random.nextInt(gemVariantList.size()));
-		setGemVariant(getGemVariant(picked), randomize, randomize);
+		setGemVariant(RegistryUtil.getGemVariantFromRegistry(level(),picked), randomize, randomize);
 	}
 	//endregion
 

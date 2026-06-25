@@ -1,22 +1,24 @@
 package com.honeyedlemons.verneuli.blocks;
 
-import com.google.common.collect.Iterables;
 import com.honeyedlemons.verneuli.compat.OpenPartiesAndClaimsCompat;
 import com.honeyedlemons.verneuli.config.VerneuilConfigServer;
-import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
-import com.honeyedlemons.verneuli.data.dataTypes.*;
+import com.honeyedlemons.verneuli.data.dataTypes.CruxData;
+import com.honeyedlemons.verneuli.data.dataTypes.GemVariant;
+import com.honeyedlemons.verneuli.data.dataTypes.MineralData;
+import com.honeyedlemons.verneuli.entities.gems.AbstractGem;
 import com.honeyedlemons.verneuli.util.DrainUtil;
+import com.honeyedlemons.verneuli.util.RegistryUtil;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityReference;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,11 +29,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.jspecify.annotations.Nullable;
 
@@ -53,7 +54,7 @@ public class GeodeBlockEntity extends BlockEntity {
 
 		public GeodeBlock(Properties properties) {
 			super(properties);
-			this.registerDefaultState(this.stateDefinition.any().setValue(AGE,0));
+			this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
 		}
 
 		@Override
@@ -66,6 +67,7 @@ public class GeodeBlockEntity extends BlockEntity {
 			return new GeodeBlockEntity(pos, state);
 		}
 
+		@Override
 		public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
 			super.setPlacedBy(level, pos, state, by, itemStack);
 
@@ -78,18 +80,23 @@ public class GeodeBlockEntity extends BlockEntity {
 			if (!(level.getBlockEntity(pos) instanceof GeodeBlockEntity geode))
 				return InteractionResult.FAIL;
 
-			if (!(level instanceof ServerLevel serverLevel))
+			if (!(level instanceof ServerLevel))
 				return InteractionResult.FAIL;
 
-			geode.drainBlock(pos.above(),serverLevel);
 			var gemVariant = geode.getGemVariant();
-			player.sendOverlayMessage(Component.literal(gemVariant.getFirst().gemItem().create().getDisplayName().getString()+" "+gemVariant.getSecond().toString()));
-			return InteractionResult.SUCCESS;
+
+			if (gemVariant != null) {
+				player.sendOverlayMessage(Component.literal(gemVariant.getFirst().gemItem().create().getDisplayName().getString() + " " + gemVariant.getSecond().toString()));
+				return InteractionResult.SUCCESS;
+			}
+
+			return super.useWithoutItem(state, level, pos, player, hitResult);
 		}
 
 		protected boolean isRandomlyTicking(BlockState state) {
 			return this.getAge(state) <= getMaxAge();
 		}
+
 		protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 			int age = this.getAge(state);
 			int incubationChance = VerneuilConfigServer.CONFIG.incubationChance.get();
@@ -100,7 +107,7 @@ public class GeodeBlockEntity extends BlockEntity {
 			// Drain a block in an area
 			if ((level.getBlockEntity(pos) instanceof GeodeBlockEntity geode)) {
 				for (int i = 0; i < ((age + 1) * 8); i++) {
-					geode.drainInArea(level, pos, getAge(state));
+					DrainUtil.drainInArea(geode, level, pos, getAge(state));
 				}
 			}
 
@@ -122,41 +129,23 @@ public class GeodeBlockEntity extends BlockEntity {
 		protected int getMaxAge() {
 			return 3;
 		}
+
 		protected IntegerProperty getAgeProperty() {
 			return AGE;
 		}
+
 		public int getAge(BlockState state) {
 			return state.getValue(this.getAgeProperty());
 		}
 	}
 
-	private void drainInArea(ServerLevel level, BlockPos pos, int age) {
-		// Get a iterable list of blockposes in an area around the given position, it'll infl
-		var inflation = (age * 3);
-
-		var blocksToIterate = BlockPos.betweenClosed(AABB.of(new BoundingBox(pos)).inflate(inflation));
-
-		var randomBlock = Iterables.get(blocksToIterate, level.getRandom().nextInt(Iterables.size(blocksToIterate)));
-
-		drainBlock(randomBlock, level);
-	}
-
-	private void emerge() {
-
-	}
-
-	public Pair<GemVariant, Double> getGemVariant()
-	{
+	public Pair<GemVariant, Double> getGemVariant() {
 		if (this.getLevel() == null)
 			return null;
 
-		float temperature = DrainUtil.getTemperature(this.getLevel(), this.getBlockPos());
+		CruxData cruxData = DrainUtil.getCruxData(this.getLevel(), this);
 
-		int yLevel = this.getBlockPos().getY();
-		CruxData cruxData = new CruxData(this.geologicalData, temperature, yLevel);
-
-		Registry<GemVariant> gemVariantRegistry = this.getLevel().registryAccess().lookupOrThrow(VerneuilDataTypes.GEM_VARIANT);
-		var gemVariantEntryset = gemVariantRegistry.entrySet();
+		var gemVariantEntryset = RegistryUtil.getGemVariantRegistry(this.getLevel()).entrySet();
 
 		// TEMP
 		double minDifference = Double.MAX_VALUE;
@@ -181,26 +170,87 @@ public class GeodeBlockEntity extends BlockEntity {
 		return new Pair<>(closestVariant, finalDifference);
 	}
 
-	public void drainBlock(BlockPos pos, ServerLevel serverLevel)
-	{
-		if (!serverLevel.isAreaLoaded(pos, 1))
+	public MineralData getMineralData() {
+		return this.geologicalData;
+	}
+
+	public EntityReference<LivingEntity> getOwnedBy() {
+		return this.ownedBy;
+	}
+
+	private Entity spawnGem(EntityType<LivingEntity> entityType, Level level, BlockPos pos, EntitySpawnReason spawnReason) {
+		var serverLevel = (ServerLevel) level;
+		return entityType.spawn(serverLevel, pos, spawnReason);
+	}
+
+	private void emerge() {
+		if (getLevel() == null)
 			return;
 
-		if (ModList.get().isLoaded("openpartiesandclaims")) {
-			if (this.getLevel() != null && OpenPartiesAndClaimsCompat.canBreakBlock(serverLevel.getLevel(), (EntityReference.getLivingEntity(this.ownedBy, this.getLevel())),pos))
-				return;
+		var gemVariant = getGemVariant();
+
+		var entityType = gemVariant.getFirst().entity();
+		if (entityType.isEmpty())
+			return;
+
+		var gemType = RegistryUtil.getEntityTypeRegistry(getLevel()).get(entityType.get());
+		if (gemType.isEmpty())
+			return;
+
+		var entity = gemType.get().value().spawn((ServerLevel) getLevel(), getBlockPos(), EntitySpawnReason.NATURAL);
+
+		if (!(entity instanceof AbstractGem gem))
+			return;
+
+		gem.setGemVariant(gemVariant.getFirst(), true, true);
+
+		createExitHole(gem, getLevel());
+	}
+
+	private void createExitHole(AbstractGem gem, Level level) {
+		int gemHeight = (int) Math.ceil(gem.getBbHeight());
+
+		var claimsLoaded = ModList.get().isLoaded("openpartiesandclaims");
+		var owner = EntityReference.getLivingEntity(this.getOwnedBy(), level);
+
+		var closestAir = DrainUtil.findClosestAir(level, getBlockPos());
+		var blockToExitTo = closestAir != null ? closestAir : getBlockPos();
+
+		var exitHoleBlocks = BlockPos.betweenClosed(getBlockPos().above(gemHeight - 1), blockToExitTo);
+		var particleBlocks = BlockPos.betweenClosed(blockToExitTo.above(gemHeight - 1), blockToExitTo);
+
+		for (BlockPos blockPos : exitHoleBlocks) {
+			if (claimsLoaded && OpenPartiesAndClaimsCompat.canBreakBlock((ServerLevel) level, owner, blockPos))
+				continue;
+
+			if (level.getBlockState(blockPos).is(BlockTags.FEATURES_CANNOT_REPLACE))
+				continue;
+
+			level.destroyBlock(blockPos, false);
 		}
-		Holder<Block> holder = serverLevel.getBlockState(pos).typeHolder();
-		BlockDrainData blockDrainData = holder.getData(BlockDrainDataMap.BLOCK_DRAIN_DATA);
 
-		if (blockDrainData == null)
-			return;
+		var direction = blockToExitTo.getCenter().subtract(getBlockPos().getCenter()).normalize();
 
-		MineralData.addData(this.geologicalData, blockDrainData.mineralData());
+		createEmergeParticles(particleBlocks,direction, Minecraft.getInstance().level, level.getRandom()); // This seems wrong but. uhm. it works?
 
-		if (blockDrainData.drainTo().isPresent()) {
-			var state = DrainUtil.getDrainedBlockstate(serverLevel.getLevel(),pos,blockDrainData.drainTo().get().defaultBlockState());
-			serverLevel.setBlockAndUpdate(pos, state);
+		// And finally, destroy the geode
+		level.destroyBlock(getBlockPos(), false);
+	}
+
+	private void createEmergeParticles(Iterable<BlockPos> blockPositions, Vec3 direction, Level level, RandomSource random)
+	{
+		var particleType = ParticleTypes.END_ROD;
+
+		var particleCount = 8;
+
+		for(BlockPos blockPos : blockPositions) {
+			var center = blockPos.getCenter();
+			for (int i = 0; i < particleCount; i++) {
+				double x = center.x() + (random.nextDouble() - 0.5);
+				double y = center.y() + (random.nextDouble() - 0.5);
+				double z = center.z() + (random.nextDouble() - 0.5);
+				level.addParticle(particleType, x, y, z, direction.x * 0.08, 0.1, direction.z * 0.08);
+			}
 		}
 	}
 

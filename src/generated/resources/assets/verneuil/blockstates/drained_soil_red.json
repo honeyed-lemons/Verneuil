@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "verneuil:block/drained_soil_red"
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 90
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 180
+      },
+      {
+        "model": "verneuil:block/drained_soil_red",
+        "y": 270
+      }
+    ]
+  }
+}

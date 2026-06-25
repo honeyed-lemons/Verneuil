@@ -11,12 +11,6 @@ public class OpenPartiesAndClaimsCompat {
 	{
 		var minecraftServer = level.getServer();
 		var serverApi = OpenPACServerAPI.get(minecraftServer);
-		boolean claimed = isBlockClaimed(serverApi,level,blockPos);
 		return serverApi.getChunkProtection().onEntityPlaceBlock(livingEntity,level,blockPos);
-	}
-
-	private static boolean isBlockClaimed(OpenPACServerAPI api, ServerLevel level, BlockPos pos) {
-		var claims = api.getServerClaimsManager();
-		return claims.get(level.dimension().identifier(), pos) != null;
 	}
 }

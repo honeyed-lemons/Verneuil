@@ -31,9 +31,9 @@ public record GemVariant(Optional<Holder<DefaultGemVariant>> parent, Optional<Id
 			CruxData.CODEC.optionalFieldOf("crux").forGetter(GemVariant::crux))
 			.apply(instance, GemVariant::new));
 
-	public static final Codec<Holder<GemVariant>> CODEC = RegistryFixedCodec.create(VerneuilDataTypes.GEM_VARIANT);
+	public static final Codec<Holder<GemVariant>> CODEC = RegistryFixedCodec.create(VerneuilRegistries.GEM_VARIANT);
 
-	public static StreamCodec<RegistryFriendlyByteBuf, Holder<GemVariant>> STREAM_CODEC = ByteBufCodecs.holderRegistry(VerneuilDataTypes.GEM_VARIANT);
+	public static StreamCodec<RegistryFriendlyByteBuf, Holder<GemVariant>> STREAM_CODEC = ByteBufCodecs.holderRegistry(VerneuilRegistries.GEM_VARIANT);
 
 	public GemVariant() {
 		this(Optional.empty(), Optional.empty(), null, null, null, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
