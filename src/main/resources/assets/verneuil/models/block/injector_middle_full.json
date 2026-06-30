@@ -1,0 +1,7 @@
+{
+	"parent": "verneuil:block/injector_middle",
+	"textures": {
+		"0": "verneuil:block/injector_middle_full",
+		"particle": "verneuil:block/injector_middle_full"
+	}
+}

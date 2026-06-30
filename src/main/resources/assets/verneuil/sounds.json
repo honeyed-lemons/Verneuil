@@ -1,0 +1,9 @@
+{
+  "injector_fire": {
+    "sounds": [
+      {
+        "name": "verneuil:injector_fire"
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=east,full=false,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 90
+    },
+    "facing=east,full=false,third=middle": {
+      "model": "verneuil:block/injector_middle",
+      "y": 90
+    },
+    "facing=east,full=false,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 90
+    },
+    "facing=east,full=true,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 90
+    },
+    "facing=east,full=true,third=middle": {
+      "model": "verneuil:block/injector_middle_full",
+      "y": 90
+    },
+    "facing=east,full=true,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 90
+    },
+    "facing=north,full=false,third=lower": {
+      "model": "verneuil:block/injector_lower"
+    },
+    "facing=north,full=false,third=middle": {
+      "model": "verneuil:block/injector_middle"
+    },
+    "facing=north,full=false,third=upper": {
+      "model": "verneuil:block/injector_upper"
+    },
+    "facing=north,full=true,third=lower": {
+      "model": "verneuil:block/injector_lower"
+    },
+    "facing=north,full=true,third=middle": {
+      "model": "verneuil:block/injector_middle_full"
+    },
+    "facing=north,full=true,third=upper": {
+      "model": "verneuil:block/injector_upper"
+    },
+    "facing=south,full=false,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 180
+    },
+    "facing=south,full=false,third=middle": {
+      "model": "verneuil:block/injector_middle",
+      "y": 180
+    },
+    "facing=south,full=false,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 180
+    },
+    "facing=south,full=true,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 180
+    },
+    "facing=south,full=true,third=middle": {
+      "model": "verneuil:block/injector_middle_full",
+      "y": 180
+    },
+    "facing=south,full=true,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 180
+    },
+    "facing=west,full=false,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 270
+    },
+    "facing=west,full=false,third=middle": {
+      "model": "verneuil:block/injector_middle",
+      "y": 270
+    },
+    "facing=west,full=false,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 270
+    },
+    "facing=west,full=true,third=lower": {
+      "model": "verneuil:block/injector_lower",
+      "y": 270
+    },
+    "facing=west,full=true,third=middle": {
+      "model": "verneuil:block/injector_middle_full",
+      "y": 270
+    },
+    "facing=west,full=true,third=upper": {
+      "model": "verneuil:block/injector_upper",
+      "y": 270
+    }
+  }
+}
