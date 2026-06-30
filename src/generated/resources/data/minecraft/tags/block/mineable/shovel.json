@@ -1,12 +1,12 @@
 {
   "values": [
     "verneuil:drained_soil_red",
-    "verneuil:drained_soil_blue",
     "verneuil:drained_soil_black",
     "verneuil:drained_soil_purple",
+    "verneuil:drained_soil_blue",
     "verneuil:drained_dust_red",
-    "verneuil:drained_dust_blue",
     "verneuil:drained_dust_black",
-    "verneuil:drained_dust_purple"
+    "verneuil:drained_dust_purple",
+    "verneuil:drained_dust_blue"
   ]
 }

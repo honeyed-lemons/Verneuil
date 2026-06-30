@@ -1,4 +1,4 @@
-// 26.1.2	2026-06-23T17:36:39.2302773	Model Definitions - verneuil
+// 26.1.2	2026-06-30T12:02:16.9163973	Model Definitions - verneuil
 31bc3b5a5d1bbec4e1d1b497a359682c0586630d assets/verneuil/blockstates/drained_dust_black.json
 7e0440493676f294df6fe11db822d3ddf4da3bb6 assets/verneuil/blockstates/drained_dust_blue.json
 e12a8ce645d8ae9e8fb264d14310bd59f0cd5405 assets/verneuil/blockstates/drained_dust_purple.json
@@ -11,6 +11,7 @@ b3b5943e5543e71546607cb5656695115f408ed1 assets/verneuil/blockstates/drained_sto
 77f2312968af4523b73197b4db4eb8b4b89b6420 assets/verneuil/blockstates/drained_stone_blue.json
 c1edf3bb472f5e1f5fd616ebe77318f58dee471b assets/verneuil/blockstates/drained_stone_purple.json
 950b345015470d4e86bed301df1d989626bd56cd assets/verneuil/blockstates/drained_stone_red.json
+c250efbec1f621b2c594ec1fef1b1ef01122b3b9 assets/verneuil/blockstates/injector.json
 971878068fa79cae03f5adf0251ac8cc858a157f assets/verneuil/items/amethyst_gem.json
 6ea8ce21174cd7a874c9a1a9578c178e6b24e4c0 assets/verneuil/items/biggs_jasper_gem.json
 70fc5eae53a8e007e4f27f96bb2e334dfeea550b assets/verneuil/items/carnelian_gem.json
@@ -27,7 +28,9 @@ a6e0c506fafe381e0a3275e687dbf906ea192227 assets/verneuil/items/drained_soil_red.
 1006b9c17025e58bf5ef3eec390e1878ff9f988b assets/verneuil/items/drained_stone_blue.json
 bc4087ab43659d8e1ebf806e433208ae4caf3ae2 assets/verneuil/items/drained_stone_purple.json
 f6d4929ef856655f096ae045e9db436a39ec3bf6 assets/verneuil/items/drained_stone_red.json
+3c83adbb8abae38608d1fc14b39e10ed00eb642a assets/verneuil/items/gem_seed.json
 64b7594cd06abd9c0f35688db2c8ce77330dd0c8 assets/verneuil/items/geode.json
+32dd7d9874eb54f1f14363ed68f5f4693ee24064 assets/verneuil/items/injector.json
 08fe4021a4164b009ac9665e1e0445a0f393c631 assets/verneuil/items/ocean_jasper_gem.json
 361023aeb3787179de3d880baab4c1d4920237a7 assets/verneuil/items/red_striped_jasper_gem.json
 114bc2db02cfd80cfd30483f9109dbed5c7bb53a assets/verneuil/items/rose_quartz_gem.json
@@ -56,6 +59,7 @@ e1b4c74cb958f22590e9702ab8454d80f0b25e72 assets/verneuil/models/block/drained_st
 452ccd479999a3f699b62b90e191ff7e188a5d88 assets/verneuil/models/item/biggs_jasper_gem.json
 b21d0c8daae310f4964d73185c659b4a37540658 assets/verneuil/models/item/carnelian_gem.json
 164707ef4236155d89d83267c31b6b161eb669f7 assets/verneuil/models/item/citrine_gem.json
+8f68055d5d1cd35df02d93111b474681be0e8760 assets/verneuil/models/item/gem_seed.json
 0be82f9449f50619249b8e76b1672cf71f5ebb7a assets/verneuil/models/item/ocean_jasper_gem.json
 3730fb4962f2fd2f0457c0cf037beb6ddf8302b2 assets/verneuil/models/item/red_striped_jasper_gem.json
 bd60eb8048da0754b593ccb04ebcdc3f33198b77 assets/verneuil/models/item/rose_quartz_gem.json

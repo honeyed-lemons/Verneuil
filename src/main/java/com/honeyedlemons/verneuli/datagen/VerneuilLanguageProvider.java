@@ -29,6 +29,8 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 				this.add(block.get(), StringUtils.capitalize(color.name()+" Drained Dust")));
 
 		this.add(VerneuilBlocks.GEODE.get(),"Geode");
+		this.add(VerneuilBlocks.INJECTOR.get(),"Injector");
+
 
 		// Entity Types
 		this.add(VerneuilEntities.QUARTZ.get(),"Quartz");
@@ -53,6 +55,8 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 		this.add(VerneuilItems.ZEBRA_JASPER_GEM.get(),"Zebra Jasper Gen");
 		this.add(VerneuilItems.BIGGS_JASPER_GEM.get(),"Biggs Jasper Gen");
 
+		this.add(VerneuilItems.GEM_SEED.asItem(),"Gem Seed");
+
 		// Gem Messages
 		this.addGemMessage("tame","Claimed %s!");
 		this.addGemMessage("movement_0","%s is wandering.");
@@ -70,6 +74,8 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 		this.addMisc("configuration.section.verneuil.common.toml","Verneuil Configs");
 		this.addMisc("configuration.section.verneuil.common.toml.title","Verneuil Configs");
 		this.addMisc("configuration.canPickUp","Gem Equipment Auto Pickup");
+		this.addMisc("configuration.incubationTime","Incubation Tick Rate");
+		this.addMisc("configuration.injectionDepth","Max Incubation Depth");
 	}
 
 	public void addMisc(String key, String name)

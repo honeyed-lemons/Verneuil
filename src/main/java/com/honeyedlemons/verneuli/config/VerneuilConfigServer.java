@@ -23,7 +23,7 @@ public class VerneuilConfigServer {
 				.define("canPickUp", true);
 		injectionDepth = builder
 				.comment("The depth an injector injects to when given a full redstone signal.")
-				.translation("verneui.configuration.injectionDepth")
+				.translation("verneuil.configuration.injectionDepth")
 				.defineInRange("injectionDepth",8,1,128);
 	}
 

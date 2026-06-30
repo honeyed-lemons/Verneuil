@@ -36,6 +36,26 @@
       },
       "drain_to": "stone"
     },
+    "#minecraft:terracotta": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.6,
+          "aluminium": 0.2,
+          "iron": 0.2
+        }
+      },
+      "drain_to": "stone"
+    },
+    "minecraft:clay": {
+      "mineral_data": {
+        "mineral_composition": {
+          "silica": 0.4,
+          "aluminium": 0.1,
+          "iron": 0.1
+        }
+      },
+      "drain_to": "soil"
+    },
     "#minecraft:dirt": {
       "mineral_data": {
         "mineral_composition": {

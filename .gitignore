@@ -1,7 +1,8 @@
 /Assets/
 /run/
-/.idea/
 /.github/
 /gradle/
 /.gradle/
 /build/
+/out/
+/.idea/

@@ -106,7 +106,7 @@ public class InjectorBlockEntity extends BlockEntity implements ContainerSingleI
 				ItemStack toInsert = player.getItemInHand(hand);
 				if (toInsert.getItem() == VerneuilItems.GEM_SEED.asItem() && level.getBlockEntity(pos) instanceof InjectorBlockEntity injector)
 				{
-					injector.setTheItem(toInsert.split(1));
+					injector.setTheItem(toInsert.consumeAndReturn(1,player));
 					injector.setOwnedBy(player);
 					return InteractionResult.CONSUME;
 				}
