@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "verneuil:block/drained_soil_purple"
-  }
-}
