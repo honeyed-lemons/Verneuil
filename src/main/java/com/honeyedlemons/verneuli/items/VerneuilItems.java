@@ -41,6 +41,10 @@ public class VerneuilItems {
 			"zebra_jasper_gem",
 			item -> gemItem(item, VerneuilEntities.QUARTZ.get(), "zebra_jasper"));
 
+	public static final DeferredItem<Item> GEM_SEED = ITEMS.registerSimpleItem(
+			"gem_seed");
+
+
 	public static GemItem gemItem(Item.Properties properties, EntityType<?> entityType, String variant) {
 		var resourceLocation = Identifier.fromNamespaceAndPath(MODID, entityType.toShortString() + "/" + variant);
 		return new GemItem(properties.stacksTo(1).fireResistant(), entityType, resourceLocation);

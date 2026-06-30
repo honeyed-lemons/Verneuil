@@ -9,9 +9,11 @@ import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
 import com.honeyedlemons.verneuli.data.dataTypes.BlockDrainData;
 import com.honeyedlemons.verneuli.data.dataTypes.CruxData;
 import com.honeyedlemons.verneuli.data.dataTypes.MineralData;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.level.Level;
@@ -19,9 +21,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModList;
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public class DrainUtil {
 
@@ -44,23 +49,14 @@ public class DrainUtil {
 			return this.name;
 		}
 	}
-	public enum DrainedColor implements StringRepresentable {
-		Purple("purple"), Red("red"), Blue("blue"), Black("black");
+	public static List<DrainedColorType> DrainedColors = List.of(
+			new DrainedColorType("purple",new ColorRGBA(5714537), MapColor.COLOR_PURPLE),
+			new DrainedColorType("blue",new ColorRGBA(9418986), MapColor.COLOR_BLUE),
+			new DrainedColorType("red",new ColorRGBA(13738869), MapColor.COLOR_RED),
+			new DrainedColorType("black",new ColorRGBA(5131099), MapColor.COLOR_BLACK)
+	);
 
-		private final String name;
-
-		DrainedColor(String name) {
-			this.name = name;
-		}
-
-		public String toString() {
-			return this.getSerializedName();
-		}
-
-		public String getSerializedName() {
-			return this.name;
-		}
-	}
+	public record DrainedColorType(String name, ColorRGBA color, MapColor mapColor){}
 
 	public static float getTemperature(Level level, BlockPos pos)
 	{
@@ -116,7 +112,7 @@ public class DrainUtil {
 		return new CruxData(geode.getMineralData(), temperature, yLevel);
 	}
 
-	private static Block getDrainedBlock(DrainedColor color, DrainType type)
+	private static Block getDrainedBlock(DrainedColorType color, DrainType type)
 	{
 		if (type == DrainType.STONE)
 			return VerneuilBlocks.DRAINED_STONES.get(color).get();
@@ -138,17 +134,17 @@ public class DrainUtil {
 		return blockState;
 	}
 
-	public static DrainedColor getDrainedColor(Level level, BlockPos blockPos) {
+	public static DrainedColorType getDrainedColor(Level level, BlockPos blockPos) {
 		var temperature = getTemperature(level, blockPos);
 
 		if (blockPos.getY() <= 0)
-			return DrainedColor.Black;
+			return DrainedColors.get(0);
 		else if (temperature <= 0.25)
-			return DrainUtil.DrainedColor.Blue;
+			return DrainedColors.get(1);
 		else if (temperature >= 0.95)
-			return DrainedColor.Red;
+			return DrainedColors.get(2);
 		else
-			return DrainedColor.Purple;
+			return DrainedColors.get(3);
 	}
 
 	public static int getDrainedIndex(Level level, BlockPos blockPos)

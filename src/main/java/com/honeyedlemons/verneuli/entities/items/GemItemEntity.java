@@ -43,15 +43,9 @@ public class GemItemEntity extends ItemEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (this.tickCount % 20 == 0 && !this.level().isClientSide()) {
-			int reformSeconds = VerneuilConfigServer.CONFIG.reformTime.get();
-			if (reformTicks >= reformSeconds) {
-				if (this.getItem().getItem() instanceof GemItem gemItem) {
-					gemItem.summonGem(this.getItem(), this.level(), BlockPos.containing(this.position()), null);
-				}
-			}
-			else {
-				reformTicks++;
+		if (this.random.nextInt(512) == 0 && !this.level().isClientSide()) {
+			if (this.getItem().getItem() instanceof GemItem gemItem) {
+				gemItem.summonGem(this.getItem(), this.level(), BlockPos.containing(this.position()), null);
 			}
 		}
 	}

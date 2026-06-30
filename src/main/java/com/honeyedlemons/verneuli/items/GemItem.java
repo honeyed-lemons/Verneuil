@@ -82,6 +82,7 @@ public class GemItem extends Item implements IItemExtension {
 			if (entity instanceof AbstractGem gem) {
 				GemVariant gemVariant = getGemVariant(serverLevel, gemVariantLocation);
 				gem.setGemVariant(gemVariant, true, true);
+				gem.setPersistenceRequired();
 			}
 		}
 		else { // Spawn gem with NBT data

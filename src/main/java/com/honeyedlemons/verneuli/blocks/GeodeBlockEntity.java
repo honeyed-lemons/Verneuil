@@ -139,7 +139,7 @@ public class GeodeBlockEntity extends BlockEntity {
 		}
 	}
 
-	public Pair<GemVariant, Double> getGemVariant() {
+	public @Nullable Pair<GemVariant, Double> getGemVariant() {
 		if (this.getLevel() == null)
 			return null;
 
@@ -174,13 +174,23 @@ public class GeodeBlockEntity extends BlockEntity {
 		return this.geologicalData;
 	}
 
-	public EntityReference<LivingEntity> getOwnedBy() {
+	public @Nullable EntityReference<LivingEntity> getOwnedBy() {
 		return this.ownedBy;
 	}
 
-	private Entity spawnGem(EntityType<LivingEntity> entityType, Level level, BlockPos pos, EntitySpawnReason spawnReason) {
-		var serverLevel = (ServerLevel) level;
-		return entityType.spawn(serverLevel, pos, spawnReason);
+	public void setOwnedBy(LivingEntity entity)
+	{
+		this.ownedBy = EntityReference.of(entity);
+	}
+
+	public void setOwnedBy(EntityReference<LivingEntity> reference)
+	{
+		this.ownedBy = reference;
+	}
+
+	public void setOwnedBy(ValueInput input, String name)
+	{
+		this.ownedBy = EntityReference.read(input,name);
 	}
 
 	private void emerge() {
@@ -188,6 +198,9 @@ public class GeodeBlockEntity extends BlockEntity {
 			return;
 
 		var gemVariant = getGemVariant();
+
+		if (gemVariant == null)
+			return;
 
 		var entityType = gemVariant.getFirst().entity();
 		if (entityType.isEmpty())
@@ -202,6 +215,8 @@ public class GeodeBlockEntity extends BlockEntity {
 		if (!(entity instanceof AbstractGem gem))
 			return;
 
+		gem.setPersistenceRequired();
+		
 		gem.setGemVariant(gemVariant.getFirst(), true, true);
 
 		createExitHole(gem, getLevel());
@@ -231,6 +246,9 @@ public class GeodeBlockEntity extends BlockEntity {
 
 		var direction = blockToExitTo.getCenter().subtract(getBlockPos().getCenter()).normalize();
 
+		if (Minecraft.getInstance().level == null)
+			return;
+
 		createEmergeParticles(particleBlocks,direction, Minecraft.getInstance().level, level.getRandom()); // This seems wrong but. uhm. it works?
 
 		// And finally, destroy the geode
@@ -257,14 +275,14 @@ public class GeodeBlockEntity extends BlockEntity {
 	@Override
 	public void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		input.read("geo_data", MineralData.CODEC).ifPresent(MineralData::new);
-		this.ownedBy = EntityReference.read(input, "owned_by");
+		input.read("GeoData", MineralData.CODEC).ifPresent(MineralData::new);
+		setOwnedBy(input,"OwnedBy");
 	}
 
 	@Override
 	public void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.store("geo_data", MineralData.CODEC, this.geologicalData);
-		EntityReference.store(this.ownedBy, output, "owned_by");
+		output.store("GeoData", MineralData.CODEC, this.geologicalData);
+		EntityReference.store(this.ownedBy, output, "OwnedBy");
 	}
 }

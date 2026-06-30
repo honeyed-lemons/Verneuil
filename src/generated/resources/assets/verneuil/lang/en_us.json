@@ -25,7 +25,6 @@
   "verneuil.commands.randomize.success.multiple": "Randomized %s gems' appearances!",
   "verneuil.commands.randomize.success.single": "Randomized %s's appearance!",
   "verneuil.configuration.canPickUp": "Gem Equipment Auto Pickup",
-  "verneuil.configuration.reformTime": "Reform Time",
   "verneuil.configuration.section.verneuil.common.toml": "Verneuil Configs",
   "verneuil.configuration.section.verneuil.common.toml.title": "Verneuil Configs",
   "verneuil.configuration.title": "Verneuil Configs",

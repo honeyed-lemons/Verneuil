@@ -20,13 +20,13 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 	protected void addTranslations() {
 		// Blocks
 		VerneuilBlocks.DRAINED_STONES.forEach((color, block) ->
-				this.add(block.get(), StringUtils.capitalize(color.getSerializedName()+" Drained Stone")));
+				this.add(block.get(), StringUtils.capitalize(color.name()+" Drained Stone")));
 
 		VerneuilBlocks.DRAINED_SOILS.forEach((color, block) ->
-				this.add(block.get(), StringUtils.capitalize(color.getSerializedName()) +" Drained Soil"));
+				this.add(block.get(), StringUtils.capitalize(color.name()) +" Drained Soil"));
 
 		VerneuilBlocks.DRAINED_DUSTS.forEach((color, block) ->
-				this.add(block.get(), StringUtils.capitalize(color.getSerializedName()+" Drained Dust")));
+				this.add(block.get(), StringUtils.capitalize(color.name()+" Drained Dust")));
 
 		this.add(VerneuilBlocks.GEODE.get(),"Geode");
 
@@ -69,7 +69,6 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 		this.addMisc("configuration.title","Verneuil Configs");
 		this.addMisc("configuration.section.verneuil.common.toml","Verneuil Configs");
 		this.addMisc("configuration.section.verneuil.common.toml.title","Verneuil Configs");
-		this.addMisc("configuration.reformTime","Reform Time");
 		this.addMisc("configuration.canPickUp","Gem Equipment Auto Pickup");
 	}
 
@@ -84,10 +83,5 @@ public class VerneuilLanguageProvider extends LanguageProvider {
 
 	public void addGemMessage(String key, String name) {
 		add(Verneuil.MODID+".gem_message."+key, name);
-	}
-
-	@SubscribeEvent // on the mod event bus
-	public static void gatherData(GatherDataEvent.Client event) {
-		event.createProvider(VerneuilLanguageProvider::new);
 	}
 }

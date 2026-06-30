@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 @EventBusSubscriber(modid = Verneuil.MODID)
 public class VerneuilLayerDefinitions {
 	// Our ModelLayerLocation.
-	public static final ModelLayerLocation BASE_GEM_LAYER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Verneuil.MODID, "gem"), "main");
+	public static final ModelLayerLocation BASE_GEM_LAYER = new ModelLayerLocation(Verneuil.id("gem"), "main");
 	public static final CubeDeformation OUTER_ARMOR_DEFORMATION = new CubeDeformation(1.05F);
 	public static final CubeDeformation INNER_ARMOR_DEFORMATION = new CubeDeformation(1.2F);
 	public static final ArmorModelSet<ModelLayerLocation> QUARTZ_ARMOR = registerArmorSet("armor");
@@ -30,7 +30,7 @@ public class VerneuilLayerDefinitions {
 	}
 
 	public static ArmorModelSet<ModelLayerLocation> registerArmorSet(String path) {
-		var resourceLocation = Identifier.fromNamespaceAndPath(Verneuil.MODID, path);
+		var resourceLocation = Verneuil.id(path);
 		return new ArmorModelSet<>(new ModelLayerLocation(resourceLocation, "helmet"), new ModelLayerLocation(resourceLocation, "chestplate"), new ModelLayerLocation(resourceLocation, "leggings"), new ModelLayerLocation(resourceLocation, "boots"));
 	}
 }

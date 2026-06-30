@@ -8,8 +8,10 @@ import com.honeyedlemons.verneuli.data.dataMaps.BlockDrainDataMap;
 import com.honeyedlemons.verneuli.data.dataMaps.EntityGemVariantsDataMap;
 import com.honeyedlemons.verneuli.entities.VerneuilEntities;
 import com.honeyedlemons.verneuli.items.VerneuilItems;
+import com.honeyedlemons.verneuli.sounds.VerneuilSounds;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,6 +40,7 @@ public class Verneuil {
 		VerneuilEntities.ENTITY_TYPES.register(modEventBus);
 		VerneuilItems.ITEMS.register(modEventBus);
 		VerneuilBlocks.BLOCKS.register(modEventBus);
+		VerneuilSounds.SOUND_EVENTS.register(modEventBus);
 
 		CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -48,14 +51,16 @@ public class Verneuil {
 		modContainer.registerConfig(ModConfig.Type.SERVER, VerneuilConfigServer.CONFIG_SPEC);
 	}
 
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MODID,path);
+	}
+
 	private void commonSetup(FMLCommonSetupEvent event) {
 		// Some common setup code
-		LOGGER.info("HELLO FROM COMMON SETUP");
 	}
 
 	@SubscribeEvent
 	public void onServerStarting(ServerStartingEvent event) {
 		// Do something when the server starts
-		LOGGER.info("HELLO from server starting");
 	}
 }

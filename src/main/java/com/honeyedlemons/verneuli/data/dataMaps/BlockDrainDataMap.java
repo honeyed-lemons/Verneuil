@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 public class BlockDrainDataMap {
 	public static final DataMapType<Block, BlockDrainData> BLOCK_DRAIN_DATA = DataMapType
-			.builder(Identifier.fromNamespaceAndPath(Verneuil.MODID, "drain_data"), Registries.BLOCK, BlockDrainData.CODEC).build();
+			.builder(Verneuil.id("drain_data"), Registries.BLOCK, BlockDrainData.CODEC).build();
 
 	@SubscribeEvent
 	public static void register(RegisterDataMapTypesEvent event) {

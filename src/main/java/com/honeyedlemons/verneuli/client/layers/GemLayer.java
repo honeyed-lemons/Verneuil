@@ -47,7 +47,7 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel> {
 	}
 
 	public Identifier getIdentifier(GemRenderState renderState, String name) {
-		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
+		return Verneuil.id("textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
 	}
 
 	public Identifier getVariantLocation(GemRenderState renderState, LayerData layerData, String variant) {
@@ -61,6 +61,6 @@ public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel> {
 				}
 			}
 		}
-		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
+		return Verneuil.id("textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
 	}
 }

@@ -27,7 +27,7 @@
       },
       "drain_to": "dust"
     },
-    "#c:sandstone": {
+    "#c:sandstone/blocks": {
       "mineral_data": {
         "mineral_composition": {
           "silica": 1.6,

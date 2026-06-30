@@ -34,7 +34,7 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
 	@Override
 	public Identifier getTextureLocation(GemRenderState renderState) {
 		var type = renderState.entityType.toShortString();
-		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "/textures/entity/gems/" + type + "/" + type + ".png");
+		return Verneuil.id("/textures/entity/gems/" + type + "/" + type + ".png");
 	}
 
 	@Override

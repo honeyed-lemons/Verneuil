@@ -22,7 +22,7 @@ public class EntityGemVariantsDataMap {
 			Codec.list(Identifier.CODEC).fieldOf("gem_variants").forGetter(GemVariants::gemVariants))
 			.apply(instance, GemVariants::new));
 	public static final AdvancedDataMapType<EntityType<?>, GemVariants, DataMapValueRemover.Default<GemVariants, EntityType<?>>> GEM_VARIANTS = AdvancedDataMapType
-			.builder(Identifier.fromNamespaceAndPath(Verneuil.MODID, "gem_variants"), Registries.ENTITY_TYPE, CODEC)
+			.builder(Verneuil.id("gem_variants"), Registries.ENTITY_TYPE, CODEC)
 			.remover(DataMapValueRemover.Default.codec())
 			.merger(new GemVariantsMerger())
 			.build();

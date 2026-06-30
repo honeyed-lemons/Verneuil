@@ -46,7 +46,7 @@ public class ColorUtil {
 	public static Identifier paletteLocation(AbstractGem gem, String type) {
 		var gemType = gem.getType().toShortString();
 		var gemVariantType = gem.getGemVariant().type();
-		return Identifier.fromNamespaceAndPath(Verneuil.MODID, "palettes/" + gemType + "/" + gemVariantType + "/" + type + ".png");
+		return Verneuil.id("palettes/" + gemType + "/" + gemVariantType + "/" + type + ".png");
 	}
 
 	public static Color colorFromInt(int rgb) {
